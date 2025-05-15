@@ -18,19 +18,29 @@ class TimerController extends GetxController {
   /// Singleton instance of persistent storage
   static final FlutterSecureStorage _storage = FlutterSecureStorage();
 
+  /// The current time control
+  static TimeControl currentTimeControl = timeControlPresets[3];
+
+  static void choosePreset(String name) {
+    var preset = getPreset(name);
+    if (preset != null) {
+      currentTimeControl = preset;
+    }
+  }
+
   /// Add a new custom time control
-  static void addPreset(String name, TimeControl timeControl) {
-    timeControlPresets[name] = timeControl;
+  static void addPreset(TimeControl timeControl) {
+    timeControlPresets.add(timeControl);
   }
 
   /// Remove a preset by name
   static void removePreset(String name) {
-    timeControlPresets.remove(name);
+    timeControlPresets.removeWhere((x) => x.name == name);
   }
 
   /// Get a preset by name (returns null if not found)
   static TimeControl? getPreset(String name) {
-    return timeControlPresets[name];
+    return timeControlPresets.singleWhere((x) => x.name == name);
   }
 
   /// Save the presets to persistent storage
@@ -43,10 +53,10 @@ class TimerController extends GetxController {
     var read = await _storage.read(key: "time_controls");
 
     if(read != null){
-      Map<String, dynamic> decoded = jsonDecode(read);
+      List<dynamic> decoded = jsonDecode(read);
       timeControlPresets.clear();
-      decoded.forEach((key, value) {
-        timeControlPresets[key] = TimeControl(value['seconds'], value['increment']);
+      decoded.forEach((value) {
+        timeControlPresets.add(TimeControl(value['seconds'], value['increment'], value['name']));
       });
     }
   }

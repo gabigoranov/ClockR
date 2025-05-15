@@ -22,13 +22,15 @@ class ClockScreen extends StatelessWidget {
             Obx(() => CountdownTimerComponent(
               isActive: !timerController.isPlayerTurn.value &&
                   timerController.isRunning.value,
-              onTap: () {
+              onTap: () async{
                 if (!timerController.isRunning.value) {
-                  timerController.startBothTimers();
-                  timerController.switchTurn();
+                  await timerController.startClock(didPlayerStart: false);
         
                 } else {
-                  timerController.switchTurn();
+                  if(!timerController.isPlayerTurn.value)
+                  {
+                    await timerController.switchTurn();
+                  }
                 }
               },
               onFinished: () => print('Opponent time expired'),
@@ -43,13 +45,14 @@ class ClockScreen extends StatelessWidget {
             Obx(() => CountdownTimerComponent(
               isActive: timerController.isPlayerTurn.value &&
                   timerController.isRunning.value,
-              onTap: () {
+              onTap: () async {
                 if (!timerController.isRunning.value) {
-                  timerController.startBothTimers();
-                  timerController.switchTurn();
-        
+                  await timerController.startClock(didPlayerStart: true);
                 } else {
-                  timerController.switchTurn();
+                  if(timerController.isPlayerTurn.value)
+                  {
+                    await timerController.switchTurn();
+                  }
                 }
               },
               onFinished: () => print('Player time expired'),

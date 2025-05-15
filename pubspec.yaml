@@ -69,6 +69,8 @@ flutter:
     - assets/
     - assets/sounds/
     - assets/sounds/clock_tap.wav
+    - assets/sounds/clock_tap_1.wav
+    - assets/sounds/clock_tap_2.wav
     - lib/l10n/app_en.arb
     - lib/l10n/app_bg.arb
 

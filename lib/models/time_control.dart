@@ -1,8 +1,9 @@
 class TimeControl {
   final int seconds;
   final int increment;
+  final String name;
 
-  const TimeControl(this.seconds, this.increment);
+  const TimeControl(this.seconds, this.increment, this.name);
 
   @override
   String toString() {

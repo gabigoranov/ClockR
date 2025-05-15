@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:tempus/controllers/countdown_timer_controller.dart';
 
 class CountdownTimerComponent extends StatefulWidget {
@@ -25,15 +26,13 @@ class CountdownTimerComponent extends StatefulWidget {
 
 class _CountdownTimerComponentState extends State<CountdownTimerComponent>
     with SingleTickerProviderStateMixin {
-  late int remainingSeconds;
-  Timer? timer;
+
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
-    remainingSeconds = widget.isPlayer ? (CountdownTimerController.to.playerTime.value / 1000).floor() : (CountdownTimerController.to.opponentTime.value / 1000).floor();
 
     // Faster animation controller (120ms)
     _animationController = AnimationController(
@@ -48,49 +47,10 @@ class _CountdownTimerComponentState extends State<CountdownTimerComponent>
       ),
     );
 
-    if (widget.isActive) {
-      startTimer();
-    }
   }
 
-  @override
-  void didUpdateWidget(CountdownTimerComponent oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    remainingSeconds = widget.isPlayer ? (CountdownTimerController.to.playerTime.value / 1000).floor() : (CountdownTimerController.to.opponentTime.value / 1000).floor();
-    if (widget.isActive != oldWidget.isActive) {
-      if (widget.isActive) {
-        startTimer();
-      } else {
-        stopTimer();
-      }
-    }
-  }
 
-  void startTimer() {
-    timer?.cancel();
-    timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
-      if (remainingSeconds > 0) {
-        setState(() {
-          remainingSeconds--;
-        });
-      } else {
-        stopTimer();
-        widget.onFinished?.call();
-      }
-    });
-  }
 
-  void stopTimer() {
-    timer?.cancel();
-    timer = null;
-  }
-
-  @override
-  void dispose() {
-    timer?.cancel();
-    _animationController.dispose();
-    super.dispose();
-  }
 
   String formatTime(int seconds) {
     final minutes = seconds ~/ 60;
@@ -114,19 +74,31 @@ class _CountdownTimerComponentState extends State<CountdownTimerComponent>
         child: AnimatedBuilder(
           animation: _animationController,
           builder: (context, child) {
+            final isTimeUp = (widget.isPlayer
+                ? CountdownTimerController.to.playerTime.value
+                : CountdownTimerController.to.opponentTime.value) <= 0;
+
             return Transform.scale(
               scale: _scaleAnimation.value,
               child: Container(
                 margin: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: widget.isActive ? Colors.blue[50] : Colors.grey[200],
+                  color: isTimeUp
+                      ? Colors.red[300]  // Red background when time's up
+                      : widget.isActive
+                      ? Colors.blue[50]
+                      : Colors.grey[200],
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: widget.isActive ? Colors.blue : Colors.transparent,
+                    color: isTimeUp
+                        ? Colors.red  // Red border when time's up
+                        : widget.isActive
+                        ? Colors.blue
+                        : Colors.transparent,
                     width: 4,
                   ),
                   boxShadow: [
-                    if (widget.isActive)
+                    if (widget.isActive && !isTimeUp)
                       BoxShadow(
                         color: Colors.blue.withValues(alpha: 0.3),
                         blurRadius: 10,
@@ -136,8 +108,8 @@ class _CountdownTimerComponentState extends State<CountdownTimerComponent>
                 ),
                 child: Stack(
                   children: [
-                    // Active indicator pulse
-                    if (widget.isActive)
+                    // Active indicator pulse (only when not time up)
+                    if (widget.isActive && !isTimeUp)
                       Positioned.fill(
                         child: IgnorePointer(
                           child: AnimatedOpacity(
@@ -160,38 +132,58 @@ class _CountdownTimerComponentState extends State<CountdownTimerComponent>
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              // Turn indicator
-                              AnimatedOpacity(
-                                opacity: widget.isActive ? 1.0 : 0.0,
-                                duration: const Duration(milliseconds: 200),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 6),
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: const Text(
-                                    'ACTIVE',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
+                              // Turn indicator (hidden when time's up)
+                              if (!isTimeUp)
+                                AnimatedOpacity(
+                                  opacity: widget.isActive ? 1.0 : 0.0,
+                                  duration: const Duration(milliseconds: 200),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 6),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: const Text(
+                                      'ACTIVE',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
                               const SizedBox(height: 12),
-                              Text(
-                                formatTime(remainingSeconds),
-                                style: TextStyle(
-                                  fontSize: 72,
-                                  fontWeight: FontWeight.bold,
-                                  color: widget.isActive
-                                      ? Colors.blue[800]
-                                      : Colors.grey[800],
+                              Obx(() {
+                                final milliseconds = widget.isPlayer
+                                    ? CountdownTimerController.to.playerTime.value
+                                    : CountdownTimerController.to.opponentTime.value;
+                                final isTimeUp = milliseconds <= 0;
+
+                                return Text(
+                                  formatTime((milliseconds / 1000).floor()),
+                                  style: TextStyle(
+                                    fontSize: 72,
+                                    fontWeight: FontWeight.bold,
+                                    color: isTimeUp
+                                        ? Colors.white  // White text for better contrast on red
+                                        : widget.isActive
+                                        ? Colors.blue[800]
+                                        : Colors.grey[800],
+                                  ),
+                                );
+                              }),
+                              // Time's up message
+                              if (isTimeUp)
+                                const Text(
+                                  'TIME UP!',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 24,
+                                  ),
                                 ),
-                              ),
                             ],
                           ),
                         ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:get/get.dart';
+import 'package:tempus/services/audio_service.dart';
 import 'package:tempus/views/clock_screen.dart';
 
 import 'controllers/common/themes.dart';

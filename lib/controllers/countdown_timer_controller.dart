@@ -1,10 +1,10 @@
-import 'dart:async';
-import 'dart:ui';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
+import 'package:tempus/controllers/timer_controller.dart';
 
 import '../services/audio_service.dart';
 
-class CountdownTimerController extends GetxController {
+class CountdownTimerController extends GetxController with GetTickerProviderStateMixin {
   static CountdownTimerController get to => Get.find();
 
   // Reactive state variables
@@ -14,9 +14,9 @@ class CountdownTimerController extends GetxController {
   final isRunning = false.obs;
   final isGameOver = false.obs;
 
-  // Timer references
-  Timer? _playerTimer;
-  Timer? _opponentTimer;
+  // Tickers for precise timing
+  Ticker? _playerTicker;
+  Ticker? _opponentTicker;
 
   // Time tracking
   int? _lastPlayerTimestamp;
@@ -37,7 +37,7 @@ class CountdownTimerController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    initialize(300); // Default to 5 minutes
+    initialize(TimerController.currentTimeControl.seconds); // Default to 5 minutes
   }
 
   void initialize(int initialTimeInSeconds) {
@@ -45,34 +45,32 @@ class CountdownTimerController extends GetxController {
     reset();
   }
 
-  void startClock() {
+  Future<void> startClock({bool didPlayerStart = true}) async{
     if (isGameOver.value) return;
 
+    isPlayerTurn.value = !didPlayerStart;
     isRunning.value = true;
-    if (isPlayerTurn.value) {
-      _startPlayerTimer();
+    if (didPlayerStart) {
+      _startOpponentTicker();
     } else {
-      _startOpponentTimer();
+      _startPlayerTicker();
     }
 
-    AudioService.playSound('sounds/clock_tap.wav');
+    await playRespectiveSound();
   }
-  // Add this to your CountdownTimerController
+
   void startBothTimers() {
     if (isGameOver.value) return;
 
     isRunning.value = true;
-    _startPlayerTimer();
-    _startOpponentTimer();
-
+    _startPlayerTicker();
+    _startOpponentTicker();
   }
-
-  void _startPlayerTimer() {
-    _playerTimer?.cancel();
+  void _startPlayerTicker() {
     _lastPlayerTimestamp = DateTime.now().millisecondsSinceEpoch;
 
-    _playerTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
-      if (!isPlayerTurn.value) return; // Only count down if it's player's turn
+    _playerTicker = createTicker((_) {
+      if (!isPlayerTurn.value || !isRunning.value) return;
 
       final now = DateTime.now().millisecondsSinceEpoch;
       final elapsed = now - _lastPlayerTimestamp!;
@@ -82,18 +80,34 @@ class CountdownTimerController extends GetxController {
 
       if (playerTime.value <= 0) {
         playerTime.value = 0;
-        isGameOver.value = true;
-        onPlayerTimeOut?.call();
+        _handleTimeOut(isPlayer: true);
       }
     });
+    _playerTicker!.start();
   }
 
-  void _startOpponentTimer() {
-    _opponentTimer?.cancel();
+  void _handleTimeOut({required bool isPlayer}) {
+    isGameOver.value = true;
+    pause(); // This stops both tickers
+
+    if (isPlayer) {
+      onPlayerTimeOut?.call();
+    } else {
+      onOpponentTimeOut?.call();
+    }
+
+    update(); // Force UI refresh
+  }
+
+
+  void _startOpponentTicker() {
+    _stopPlayerTicker();    // Ensure only opponent ticker runs
+    _stopOpponentTicker();  // Stop any existing ticker before creating a new one
+
     _lastOpponentTimestamp = DateTime.now().millisecondsSinceEpoch;
 
-    _opponentTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
-      if (isPlayerTurn.value) return; // Only count down if it's opponent's turn
+    _opponentTicker = createTicker((_) {
+      if (isPlayerTurn.value) return;
 
       final now = DateTime.now().millisecondsSinceEpoch;
       final elapsed = now - _lastOpponentTimestamp!;
@@ -103,47 +117,66 @@ class CountdownTimerController extends GetxController {
 
       if (opponentTime.value <= 0) {
         opponentTime.value = 0;
-        isGameOver.value = true;
-        onOpponentTimeOut?.call();
+        _handleTimeOut(isPlayer: false);
       }
     });
+
+    _opponentTicker!.start();
   }
 
-// Modify your switchTurn method to only change turns, not start/stop timers
-  void switchTurn() {
-    if (!isRunning.value || isGameOver.value) return;
+  Future<void> switchTurn() async{
+    if (isGameOver.value) return;
+
     isPlayerTurn.value = !isPlayerTurn.value;
     onTurnChanged?.call();
 
-    AudioService.playSound('sounds/clock_tap.wav');
+    if (isPlayerTurn.value) {
+      _startPlayerTicker();
+    } else {
+      _startOpponentTicker();
+    }
+
+    await playRespectiveSound();
   }
+
 
   void pause() {
     isRunning.value = false;
-    _stopPlayerTimer();
-    _stopOpponentTimer();
+    _stopPlayerTicker();
+    _stopOpponentTicker();
+  }
 
+  Future<void> playRespectiveSound() async {
+    if(!isPlayerTurn.value){
+      await AudioService.playSound('sounds/clock_tap_2.wav');
+      return;
+    }
+    await AudioService.playSound('sounds/clock_tap_1.wav');
+
+    print("sound played");
   }
 
   void reset() {
-    print('Resetting timer...');
     pause();
+
     playerTime.value = _initialTime;
     opponentTime.value = _initialTime;
+
     isPlayerTurn.value = true;
     isGameOver.value = false;
-    print('Reset complete - playerTime: ${playerTime.value}');
   }
 
-  void _stopPlayerTimer() {
-    _playerTimer?.cancel();
-    _playerTimer = null;
+  void _stopPlayerTicker() {
+    _playerTicker?.stop();
+    _playerTicker?.dispose();
+    _playerTicker = null;
     _lastPlayerTimestamp = null;
   }
 
-  void _stopOpponentTimer() {
-    _opponentTimer?.cancel();
-    _opponentTimer = null;
+  void _stopOpponentTicker() {
+    _opponentTicker?.stop();
+    _opponentTicker?.dispose();
+    _opponentTicker = null;
     _lastOpponentTimestamp = null;
   }
 
@@ -156,8 +189,8 @@ class CountdownTimerController extends GetxController {
 
   @override
   void onClose() {
-    _playerTimer?.cancel();
-    _opponentTimer?.cancel();
+    _stopPlayerTicker();
+    _stopOpponentTicker();
     super.onClose();
   }
 }

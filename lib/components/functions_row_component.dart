@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tempus/controllers/countdown_timer_controller.dart';
+import 'package:tempus/views/time_control_selection_screen.dart';
 
 class FunctionsRowComponent extends StatelessWidget {
   const FunctionsRowComponent({super.key});
@@ -64,7 +65,7 @@ class FunctionsRowComponent extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.settings_rounded, size: 36),
             onPressed: () {
-              // Add your settings navigation here
+              Get.to(() => const TimeControlSelectionScreen(), transition: Transition.fade);
             },
             tooltip: 'Settings',
           ),
