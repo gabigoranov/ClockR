@@ -40,6 +40,7 @@ dependencies:
   flutter_launcher_icons: ^0.14.3
   flutter_native_splash: ^2.4.6
   audioplayers: ^6.4.0
+  flutter_svg: ^2.1.0
 
 
 dev_dependencies:
@@ -70,7 +71,12 @@ flutter:
     - assets/sounds/
     - assets/sounds/clock_tap.wav
     - assets/sounds/clock_tap_1.wav
-    - assets/sounds/clock_tap_2.wav
+    - assets/sounds/clock_tap_1.wav
+    - assets/sounds/alarm.wav
+    - assets/svgs/bullet.svg
+    - assets/svgs/blitz.svg
+    - assets/svgs/rapid.svg
+    - assets/svgs/classical.svg
     - lib/l10n/app_en.arb
     - lib/l10n/app_bg.arb
 

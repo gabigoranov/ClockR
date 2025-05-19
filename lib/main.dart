@@ -74,7 +74,7 @@ class _MyAppState extends State<MyApp> {
         Locale('bg', ''),
       ],
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      title: 'Clockr',
+      title: 'ClockR',
       home: const ClockScreen(),
     );
   }

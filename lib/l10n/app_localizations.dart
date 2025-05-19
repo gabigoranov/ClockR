@@ -100,6 +100,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'English'**
   String get language;
+
+  /// No description provided for @timeControls.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Controls'**
+  String get timeControls;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'ACTIVE'**
+  String get active;
+
+  /// No description provided for @timeUp.
+  ///
+  /// In en, this message translates to:
+  /// **'TIME UP!'**
+  String get timeUp;
+
+  /// No description provided for @resetTimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Timer'**
+  String get resetTimer;
+
+  /// No description provided for @resetTimerDialog.
+  ///
+  /// In en, this message translates to:
+  /// **'This will reset the timer to the initial value of the selected time control.'**
+  String get resetTimerDialog;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @pause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get pause;
+
+  /// No description provided for @play.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get play;
+
+  /// No description provided for @switchTurn.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch Turn'**
+  String get switchTurn;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @soundToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound Toggle'**
+  String get soundToggle;
+
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// No description provided for @newTimeControl.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Control'**
+  String get newTimeControl;
+
+  /// No description provided for @languageText.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get languageText;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

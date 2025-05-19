@@ -17,4 +17,6 @@ final List<TimeControl> timeControlPresets = [
   // Bullet
   const TimeControl(1 * 60, 0, 'Bullet (1+0)'),
   const TimeControl(2 * 60, 1, 'Bullet (2+1)'),
+
+  const TimeControl(35, 0, 'Bullet (35 sec)'),
 ];

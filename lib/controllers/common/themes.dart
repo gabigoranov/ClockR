@@ -23,7 +23,8 @@ final ThemeData lightTheme = ThemeData(
   appBarTheme: AppBarTheme(
     backgroundColor: AppColors.backgroundWhite,
     shadowColor: AppColors.backgroundDark,
-    titleTextStyle: TextStyle(color: AppColors.backgroundDark.withValues(alpha: 0.87), fontSize: 20),
+    titleTextStyle: TextStyle(color: AppColors.backgroundDark.withValues(alpha: 0.87), fontSize: 20, fontWeight: FontWeight.w600),
+    elevation: 0.1,
   ),
 );
 
@@ -49,5 +50,6 @@ final ThemeData darkTheme = ThemeData(
     backgroundColor: AppColors.backgroundDark,
     shadowColor: AppColors.backgroundWhite,
     titleTextStyle: TextStyle(color: AppColors.backgroundWhite.withValues(alpha: 0.87), fontSize: 20, fontWeight: FontWeight.w600),
+    elevation: 0.1
   ),
 );

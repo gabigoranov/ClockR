@@ -2,6 +2,21 @@
   "language": "English",
   "@language": {
     "description": "The current Language"
-  }
+  },
+  "timeControls": "Time Controls",
+  "active": "ACTIVE",
+  "timeUp": "TIME UP!",
+  "resetTimer": "Reset Timer",
+  "resetTimerDialog": "This will reset the timer to the initial value of the selected time control.",
+  "reset": "Reset",
+  "cancel": "Cancel",
+  "pause": "Pause",
+  "play": "Play",
+  "switchTurn": "Switch Turn",
+  "settings": "Settings",
+  "soundToggle": "Sound Toggle",
+  "edit": "Edit",
+  "newTimeControl": "Time Control",
+  "languageText": "Language"
 
 }

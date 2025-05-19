@@ -8,8 +8,9 @@ class AppColors {
   static const Color textLight = Colors.white; // Dark text on light background
   static const Color textDark = Colors.black; // Light text on dark background
   static const Color primary = Colors.blue; // Green
-  static const Color secondary = Colors.green; // Blue
+  static const Color secondary = Color(0xff1565C0); // Blue
   static const Color softerDark = Colors.black54; // Soft dark gray
   static const Color orange = Colors.orange; // Orange
   static const Color red = Colors.red; // Red
+
 }

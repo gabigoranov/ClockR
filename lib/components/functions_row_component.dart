@@ -3,6 +3,9 @@ import 'package:get/get.dart';
 import 'package:tempus/controllers/countdown_timer_controller.dart';
 import 'package:tempus/views/time_control_selection_screen.dart';
 
+import '../l10n/app_localizations.dart';
+import 'are_you_sure_dialog.dart';
+
 class FunctionsRowComponent extends StatelessWidget {
   const FunctionsRowComponent({super.key});
 
@@ -25,8 +28,23 @@ class FunctionsRowComponent extends StatelessWidget {
           // Reset Button
           IconButton(
             icon: Icon(Icons.restart_alt_rounded, size: 36),
-            onPressed: timerController.reset,
-            tooltip: 'Reset Clock',
+            onPressed: () async {
+              CountdownTimerController.to.pause();
+              final bool? result = await showAreYouSureDialog(
+                context: context,
+                title: AppLocalizations.of(context).resetTimer,
+                content: AppLocalizations.of(context).resetTimerDialog,
+                confirmText: AppLocalizations.of(context).reset,
+                cancelText: AppLocalizations.of(context).cancel,
+                confirmColor: Colors.blue, // Custom color for the confirm button
+              );
+
+              if (result == true) {
+                // User confirmed - perform the action
+                CountdownTimerController.to.reset();
+              }
+            },
+            tooltip: AppLocalizations.of(context).resetTimer,
           ),
 
           // Play/Pause Button
@@ -44,7 +62,7 @@ class FunctionsRowComponent extends StatelessWidget {
                 timerController.startClock();
               }
             },
-            tooltip: timerController.isRunning.value ? 'Pause' : 'Start',
+            tooltip: timerController.isRunning.value ? AppLocalizations.of(context).pause : AppLocalizations.of(context).play,
           ),
 
           // Turn Switch Button (only visible when clock is running)
@@ -56,7 +74,7 @@ class FunctionsRowComponent extends StatelessWidget {
                 color: Theme.of(context).primaryColor,
               ),
               onPressed: timerController.switchTurn,
-              tooltip: 'Switch Turn',
+              tooltip: AppLocalizations.of(context).switchTurn,
             )
           else
             const SizedBox(width: 48), // Placeholder for consistent spacing
@@ -67,16 +85,18 @@ class FunctionsRowComponent extends StatelessWidget {
             onPressed: () {
               Get.to(() => const TimeControlSelectionScreen(), transition: Transition.fade);
             },
-            tooltip: 'Settings',
+            tooltip: AppLocalizations.of(context).settings,
           ),
 
           // Sound Toggle Button
           IconButton(
-            icon: Icon(Icons.volume_up, size: 36),
+            icon: CountdownTimerController.to.isMuted.value
+                ? Icon(Icons.volume_off, size: 36)
+                : Icon(Icons.volume_up, size: 36),
             onPressed: () {
-              // Add your sound toggle logic here
+              CountdownTimerController.to.toggleSound();
             },
-            tooltip: 'Sound Toggle',
+            tooltip: AppLocalizations.of(context).soundToggle,
           ),
         ],
       ),

@@ -2,12 +2,17 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
+import 'package:tempus/controllers/countdown_timer_controller.dart';
 
 class AudioService {
   static final _players = <AudioPlayer>[];
   static const _maxPlayers = 5; // Prevent memory leaks
 
   static Future<void> playSound(String assetPath) async {
+    if(CountdownTimerController.to.isMuted.value) {
+      return;
+    }
+
     try {
       // Clean up finished players
       _players.removeWhere((p) => p.state == PlayerState.stopped);

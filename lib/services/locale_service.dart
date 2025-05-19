@@ -23,6 +23,17 @@ final class LocaleService {
   // Current locale value, defaulting to English ("en").
   String _locale = "en";
 
+  final languages = {
+    'en': 'English',
+    'bg': 'Български',
+  };
+
+  Future<void> changeLanguage(String languageCode) async {
+     _locale = languageCode;
+    Get.updateLocale(Locale(languageCode));
+    await save();
+  }
+
   String get language => _locale;
 
   /// Initializes the service by reading the saved locale from secure storage

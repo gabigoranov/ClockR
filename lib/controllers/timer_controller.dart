@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:tempus/components/countdown_timer_component.dart';
+import 'package:tempus/controllers/countdown_timer_controller.dart';
 
 import '../models/time_control.dart';
 import 'common/control_presets.dart';
@@ -19,12 +21,13 @@ class TimerController extends GetxController {
   static final FlutterSecureStorage _storage = FlutterSecureStorage();
 
   /// The current time control
-  static TimeControl currentTimeControl = timeControlPresets[3];
+  static final currentTimeControl = timeControlPresets[3].obs;
 
   static void choosePreset(String name) {
     var preset = getPreset(name);
     if (preset != null) {
-      currentTimeControl = preset;
+      currentTimeControl.value = preset;
+      CountdownTimerController.to.initialize(preset.seconds, preset.increment);
     }
   }
 

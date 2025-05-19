@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:tempus/controllers/countdown_timer_controller.dart';
+import 'package:tempus/l10n/app_localizations.dart';
 
 class CountdownTimerComponent extends StatefulWidget {
   final VoidCallback? onFinished;
@@ -132,29 +134,7 @@ class _CountdownTimerComponentState extends State<CountdownTimerComponent>
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              // Turn indicator (hidden when time's up)
-                              if (!isTimeUp)
-                                AnimatedOpacity(
-                                  opacity: widget.isActive ? 1.0 : 0.0,
-                                  duration: const Duration(milliseconds: 200),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 6),
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: const Text(
-                                      'ACTIVE',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              const SizedBox(height: 12),
+
                               Obx(() {
                                 final milliseconds = widget.isPlayer
                                     ? CountdownTimerController.to.playerTime.value
@@ -164,20 +144,20 @@ class _CountdownTimerComponentState extends State<CountdownTimerComponent>
                                 return Text(
                                   formatTime((milliseconds / 1000).floor()),
                                   style: TextStyle(
-                                    fontSize: 72,
+                                    fontSize: 82,
                                     fontWeight: FontWeight.bold,
                                     color: isTimeUp
                                         ? Colors.white  // White text for better contrast on red
                                         : widget.isActive
-                                        ? Colors.blue[800]
+                                        ? Get.theme.colorScheme.secondary
                                         : Colors.grey[800],
                                   ),
                                 );
                               }),
                               // Time's up message
                               if (isTimeUp)
-                                const Text(
-                                  'TIME UP!',
+                                Text(
+                                  AppLocalizations.of(context).timeUp,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,

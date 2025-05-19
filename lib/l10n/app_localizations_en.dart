@@ -10,4 +10,49 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get language => 'English';
+
+  @override
+  String get timeControls => 'Time Controls';
+
+  @override
+  String get active => 'ACTIVE';
+
+  @override
+  String get timeUp => 'TIME UP!';
+
+  @override
+  String get resetTimer => 'Reset Timer';
+
+  @override
+  String get resetTimerDialog => 'This will reset the timer to the initial value of the selected time control.';
+
+  @override
+  String get reset => 'Reset';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get pause => 'Pause';
+
+  @override
+  String get play => 'Play';
+
+  @override
+  String get switchTurn => 'Switch Turn';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get soundToggle => 'Sound Toggle';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String get newTimeControl => 'Time Control';
+
+  @override
+  String get languageText => 'Language';
 }
