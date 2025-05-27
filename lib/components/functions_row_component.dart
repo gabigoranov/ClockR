@@ -83,6 +83,7 @@ class FunctionsRowComponent extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.settings_rounded, size: 36),
             onPressed: () {
+              timerController.pause();
               Get.to(() => const TimeControlSelectionScreen(), transition: Transition.fade);
             },
             tooltip: AppLocalizations.of(context).settings,

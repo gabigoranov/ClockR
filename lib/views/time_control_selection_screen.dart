@@ -4,6 +4,7 @@ import 'package:tempus/components/time_control_component.dart';
 import 'package:tempus/controllers/common/control_presets.dart';
 import 'package:tempus/views/settings.dart';
 
+import '../controllers/theme_controller.dart';
 import '../controllers/timer_controller.dart';
 import '../l10n/app_localizations.dart';
 
@@ -47,7 +48,7 @@ class TimeControlSelectionScreen extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
       decoration: BoxDecoration(
-        color: Colors.blue.shade50, // Light blue background
+        color: Colors.blueAccent,
         borderRadius: BorderRadius.circular(12), // Rounded corners
         boxShadow: [
           BoxShadow(
@@ -119,7 +120,7 @@ class TimeControlSelectionScreen extends StatelessWidget {
                         Icon(
                           icon,
                           size: 28,
-                          color: Colors.blue.shade700,
+                          color: Colors.white ,
                         ),
                         const SizedBox(height: 6),
                         Text(
@@ -128,7 +129,7 @@ class TimeControlSelectionScreen extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: Colors.blue.shade800,
+                            color: Colors.white,
                           ),
                         ),
                       ],

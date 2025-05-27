@@ -55,4 +55,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get languageText => 'Език';
+
+  @override
+  String get darkMode => 'Тъмен режим';
 }

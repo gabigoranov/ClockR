@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:tempus/controllers/countdown_timer_controller.dart';
 import 'package:tempus/l10n/app_localizations.dart';
 
@@ -28,31 +27,33 @@ class CountdownTimerComponent extends StatefulWidget {
 
 class _CountdownTimerComponentState extends State<CountdownTimerComponent>
     with SingleTickerProviderStateMixin {
-
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
+  bool _isTapped = false;
 
   @override
   void initState() {
     super.initState();
-
-    // Faster animation controller (120ms)
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 120),
     );
-
     _scaleAnimation = Tween<double>(begin: 1.0, end: 0.97).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: Curves.easeOut,
       ),
     );
-
   }
 
-
-
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // This forces a rebuild when theme changes
+    setState(() {
+      Get.find<CountdownTimerController>().update();
+    });
+  }
 
   String formatTime(int seconds) {
     final minutes = seconds ~/ 60;
@@ -60,23 +61,40 @@ class _CountdownTimerComponentState extends State<CountdownTimerComponent>
     return '${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
   }
 
-  Future<void> _handleTap() async {
-    widget.onTap(); // Immediate response
-    await Future.wait([
-      HapticFeedback.lightImpact(),
-      _animationController.forward().then((_) => _animationController.reverse()),
-    ]);
+  Future<void> _handleTapDown(TapDownDetails details) async {
+    if (!_isTapped) {
+      _isTapped = true;
+      await HapticFeedback.lightImpact();
+      await _animationController.forward();
+    }
+  }
+
+  Future<void> _handleTapUp(TapUpDetails details) async {
+    if (_isTapped) {
+      _isTapped = false;
+      widget.onTap();
+      await _animationController.reverse();
+    }
+  }
+
+  Future<void> _handleTapCancel() async {
+    if (_isTapped) {
+      _isTapped = false;
+      await _animationController.reverse();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: GestureDetector(
-        onTap: _handleTap,
+        onTapDown: _handleTapDown,
+        onTapUp: _handleTapUp,
+        onTapCancel: _handleTapCancel,
         child: AnimatedBuilder(
           animation: _animationController,
           builder: (context, child) {
-            final isTimeUp = (widget.isPlayer
+            bool isTimeUp = (widget.isPlayer
                 ? CountdownTimerController.to.playerTime.value
                 : CountdownTimerController.to.opponentTime.value) <= 0;
 
@@ -86,31 +104,36 @@ class _CountdownTimerComponentState extends State<CountdownTimerComponent>
                 margin: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: isTimeUp
-                      ? Colors.red[300]  // Red background when time's up
+                      ? Theme.of(context).colorScheme.errorContainer
                       : widget.isActive
-                      ? Colors.blue[50]
-                      : Colors.grey[200],
+                      ? Theme.of(context).colorScheme.secondaryContainer
+                      : Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isTimeUp
-                        ? Colors.red  // Red border when time's up
-                        : widget.isActive
-                        ? Colors.blue
+                        ? Get.theme.colorScheme.error
+                        : !Get.isDarkMode
+                        ? Get.theme.colorScheme.outline.withValues(alpha: 0.3)
                         : Colors.transparent,
-                    width: 4,
+                    width: isTimeUp ? 4 : 1,
                   ),
                   boxShadow: [
                     if (widget.isActive && !isTimeUp)
                       BoxShadow(
-                        color: Colors.blue.withValues(alpha: 0.3),
+                        color: Get.theme.colorScheme.primary.withValues(alpha: 0.3),
                         blurRadius: 10,
                         spreadRadius: 2,
+                      ),
+                    if (!Get.isDarkMode && !isTimeUp && !widget.isActive)
+                      BoxShadow(
+                        color: Get.theme.colorScheme.outline.withValues(alpha: 0.1),
+                        blurRadius: 2,
+                        spreadRadius: 1,
                       ),
                   ],
                 ),
                 child: Stack(
                   children: [
-                    // Active indicator pulse (only when not time up)
                     if (widget.isActive && !isTimeUp)
                       Positioned.fill(
                         child: IgnorePointer(
@@ -119,7 +142,7 @@ class _CountdownTimerComponentState extends State<CountdownTimerComponent>
                             duration: const Duration(milliseconds: 300),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Colors.blue,
+                                color: Get.theme.colorScheme.primary,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
@@ -134,7 +157,6 @@ class _CountdownTimerComponentState extends State<CountdownTimerComponent>
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-
                               Obx(() {
                                 final milliseconds = widget.isPlayer
                                     ? CountdownTimerController.to.playerTime.value
@@ -143,25 +165,22 @@ class _CountdownTimerComponentState extends State<CountdownTimerComponent>
 
                                 return Text(
                                   formatTime((milliseconds / 1000).floor()),
-                                  style: TextStyle(
-                                    fontSize: 82,
-                                    fontWeight: FontWeight.bold,
+                                  style: Get.theme.textTheme.displayLarge?.copyWith(
                                     color: isTimeUp
-                                        ? Colors.white  // White text for better contrast on red
+                                        ? Get.theme.colorScheme.onErrorContainer
                                         : widget.isActive
-                                        ? Get.theme.colorScheme.secondary
-                                        : Colors.grey[800],
+                                        ? Get.theme.colorScheme.onSecondaryContainer
+                                        : Get.theme.colorScheme.onSurface,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 );
                               }),
-                              // Time's up message
                               if (isTimeUp)
                                 Text(
                                   AppLocalizations.of(context).timeUp,
-                                  style: TextStyle(
-                                    color: Colors.white,
+                                  style: Get.theme.textTheme.titleLarge?.copyWith(
+                                    color: Get.theme.colorScheme.onErrorContainer,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 24,
                                   ),
                                 ),
                             ],
@@ -177,5 +196,11 @@ class _CountdownTimerComponentState extends State<CountdownTimerComponent>
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 }

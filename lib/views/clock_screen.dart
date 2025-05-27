@@ -5,9 +5,14 @@ import '../components/countdown_timer_component.dart';
 import '../components/functions_row_component.dart';
 import '../controllers/countdown_timer_controller.dart';
 
-class ClockScreen extends StatelessWidget {
+class ClockScreen extends StatefulWidget {
   const ClockScreen({super.key});
 
+  @override
+  State<ClockScreen> createState() => _ClockScreenState();
+}
+
+class _ClockScreenState extends State<ClockScreen> {
   @override
   Widget build(BuildContext context) {
     final timerController = CountdownTimerController.to;
@@ -25,7 +30,7 @@ class ClockScreen extends StatelessWidget {
               onTap: () async{
                 if (!timerController.isRunning.value) {
                   await timerController.startClock(didPlayerStart: false);
-        
+
                 } else {
                   if(!timerController.isPlayerTurn.value)
                   {
@@ -37,10 +42,10 @@ class ClockScreen extends StatelessWidget {
               rotation: 2,
               isPlayer: false,
             )),
-        
+
             // Control buttons row
             FunctionsRowComponent(),
-        
+
             // Player Timer (bottom)
             Obx(() => CountdownTimerComponent(
               isActive: timerController.isPlayerTurn.value &&

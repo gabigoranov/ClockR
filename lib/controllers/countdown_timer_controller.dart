@@ -4,6 +4,7 @@ import 'package:tempus/controllers/timer_controller.dart';
 
 import '../services/audio_service.dart';
 
+/// CountdownTimerController manages the countdown timer for a chess game.
 class CountdownTimerController extends GetxController with GetTickerProviderStateMixin {
   static CountdownTimerController get to => Get.find();
 
@@ -27,7 +28,6 @@ class CountdownTimerController extends GetxController with GetTickerProviderStat
 
   // Beep tracking
   final Set<int> _beepThresholds = {30000, 20000, 15000, 10000, 5000, 4000, 3000, 2000, 1000};
-  final Set<int> _triggeredBeeps = {};
 
   // Callbacks for game events
   final VoidCallback? onPlayerTimeOut;
@@ -46,24 +46,29 @@ class CountdownTimerController extends GetxController with GetTickerProviderStat
     initialize(TimerController.currentTimeControl.value.seconds, TimerController.currentTimeControl.value.increment); // Default to 5 minutes
   }
 
+  /// Initializes the timer with the given initial time in seconds and increment in miliseconds.
   void initialize(int initialTimeInSeconds, int increment) {
     _initialTime = initialTimeInSeconds * 1000;
     _increment = increment * 1000;
     reset();
   }
 
+  /// Mute the timer sounds
   void mute(){
     isMuted.value = true;
   }
 
+  /// UnMute the timer sounds
   void unMute(){
     isMuted.value = false;
   }
 
+  /// Toggle the sound state
   void toggleSound(){
     isMuted.value = !isMuted.value;
   }
 
+  /// Starts the clock for the player or opponent based on who initiated it.
   Future<void> startClock({bool didPlayerStart = true}) async {
     if (isGameOver.value) return;
 
@@ -78,14 +83,7 @@ class CountdownTimerController extends GetxController with GetTickerProviderStat
     await playRespectiveSound();
   }
 
-  void startBothTimers() {
-    if (isGameOver.value) return;
-
-    isRunning.value = true;
-    _startPlayerTicker();
-    _startOpponentTicker();
-  }
-
+  /// Starts the player ticker, which counts down the player's time.
   void _startPlayerTicker() {
     opponentTime.value += _increment; // Add increment to opponent's time
     _lastPlayerTimestamp = DateTime.now().millisecondsSinceEpoch;
@@ -108,6 +106,7 @@ class CountdownTimerController extends GetxController with GetTickerProviderStat
     _playerTicker!.start();
   }
 
+  /// Handles the timeout logic for either player or opponent.
   void _handleTimeOut({required bool isPlayer}) {
     isGameOver.value = true;
     pause(); // This stops both tickers
@@ -121,6 +120,7 @@ class CountdownTimerController extends GetxController with GetTickerProviderStat
     update(); // Force UI refresh
   }
 
+  /// Starts the opponent ticker, which counts down the opponent's time.
   void _startOpponentTicker() {
     playerTime.value += _increment; // Add increment to opponent's time
 
@@ -148,18 +148,17 @@ class CountdownTimerController extends GetxController with GetTickerProviderStat
     _opponentTicker!.start();
   }
 
+  /// Checks if the current time has crossed any beep thresholds and plays a sound if it has.
   Future<void> _checkForBeep(int time) async {
     // Check if we've crossed any threshold from above
     for (final threshold in _beepThresholds) {
       if (time > threshold && time - threshold <= 100) { // Small buffer to account for tick rate
-        if (!_triggeredBeeps.contains(threshold)) {
-          _triggeredBeeps.add(threshold);
-          await AudioService.playSound('sounds/alarm.wav');
-        }
+        await AudioService.playSound('sounds/alarm.wav');
       }
     }
   }
 
+  /// Switches the turn between player and opponent.
   Future<void> switchTurn() async {
     if (isGameOver.value) return;
 
@@ -175,12 +174,14 @@ class CountdownTimerController extends GetxController with GetTickerProviderStat
     await playRespectiveSound();
   }
 
+  /// Pauses the timer, stopping both player and opponent tickers.
   void pause() {
     isRunning.value = false;
     _stopPlayerTicker();
     _stopOpponentTicker();
   }
 
+  /// Plays a sound based on whose turn it is.
   Future<void> playRespectiveSound() async {
     if (!isPlayerTurn.value) {
       await AudioService.playSound('sounds/clock_tap_2.wav');
@@ -189,6 +190,7 @@ class CountdownTimerController extends GetxController with GetTickerProviderStat
     await AudioService.playSound('sounds/clock_tap_1.wav');
   }
 
+  /// Resets the timer to its initial state.
   void reset() {
     pause();
 
@@ -197,9 +199,9 @@ class CountdownTimerController extends GetxController with GetTickerProviderStat
 
     isPlayerTurn.value = true;
     isGameOver.value = false;
-    _triggeredBeeps.clear();
   }
 
+  /// Stops the player ticker and resets its state.
   void _stopPlayerTicker() {
     _playerTicker?.stop();
     _playerTicker?.dispose();
@@ -207,6 +209,7 @@ class CountdownTimerController extends GetxController with GetTickerProviderStat
     _lastPlayerTimestamp = null;
   }
 
+  /// Stops the opponent ticker and resets its state.
   void _stopOpponentTicker() {
     _opponentTicker?.stop();
     _opponentTicker?.dispose();
@@ -214,6 +217,7 @@ class CountdownTimerController extends GetxController with GetTickerProviderStat
     _lastOpponentTimestamp = null;
   }
 
+  /// Formats the time in MM:SS format.
   String formatTime(int milliseconds) {
     final duration = Duration(milliseconds: milliseconds);
     final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0');

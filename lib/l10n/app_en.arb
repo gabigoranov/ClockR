@@ -17,6 +17,7 @@
   "soundToggle": "Sound Toggle",
   "edit": "Edit",
   "newTimeControl": "Time Control",
-  "languageText": "Language"
+  "languageText": "Language",
+  "darkMode": "Dark Mode"
 
 }

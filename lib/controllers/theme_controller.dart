@@ -1,22 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
 
 class ThemeController extends GetxController {
   static ThemeController get to => Get.find();
 
-  final _isDarkMode = false.obs;
-  bool get isDarkMode => _isDarkMode.value;
-
-  final _selectedTheme = 'light'.obs; // Default theme
-  String get selectedTheme => _selectedTheme.value;
-
-  final _themeMode = ThemeMode.light; // Default theme
-  ThemeMode get themeMode => _themeMode;
-
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  final _storage = const FlutterSecureStorage();
+  final Rx<ThemeMode> themeMode = ThemeMode.light.obs;
 
   @override
   void onInit() {
@@ -24,33 +15,43 @@ class ThemeController extends GetxController {
     super.onInit();
   }
 
-  void _loadTheme() async {
-    _selectedTheme.value = await _storage.read(key: 'theme') ?? 'light';
-    _isDarkMode.value = _selectedTheme.value == 'dark';
-    Get.changeThemeMode(_isDarkMode.value ? ThemeMode.dark : ThemeMode.light);
+  Future<void> _loadTheme() async {
+    final savedTheme = await _storage.read(key: 'theme') ?? 'light';
+    themeMode.value = savedTheme == 'dark' ? ThemeMode.dark : ThemeMode.light;
+    _updateSystemUI();
   }
 
-  void toggleTheme() async {
-    _isDarkMode.value = !_isDarkMode.value;
-    _selectedTheme.value = _isDarkMode.value ? 'dark' : 'light';
+  Future<void> toggleTheme() async {
+    themeMode.value = themeMode.value == ThemeMode.light
+        ? ThemeMode.dark
+        : ThemeMode.light;
 
-    await _storage.write(key: 'theme', value: _selectedTheme.value);
+    await _storage.write(
+      key: 'theme',
+      value: themeMode.value == ThemeMode.dark ? 'dark' : 'light',
+    );
 
-    Get.changeThemeMode(_isDarkMode.value ? ThemeMode.dark : ThemeMode.light);
-     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemNavigationBarColor: isDarkMode ? Colors.black : Colors.white,
-      systemNavigationBarIconBrightness: isDarkMode ? Brightness.light : Brightness.dark,
+    _updateSystemUI();
+  }
+
+  Future<void> setTheme(String theme) async {
+    themeMode.value = theme == 'dark' ? ThemeMode.dark : ThemeMode.light;
+    await _storage.write(key: 'theme', value: theme);
+    _updateSystemUI();
+  }
+
+  void _updateSystemUI() {
+    final isDark = themeMode.value == ThemeMode.dark;
+
+    Get.changeThemeMode(isDark ? ThemeMode.dark : ThemeMode.light);
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      systemNavigationBarColor: isDark ? Colors.black : Colors.white,
+      systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: isDarkMode ? Brightness.light : Brightness.dark,
+      statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
     ));
   }
 
-  void setTheme(String theme) async {
-    _selectedTheme.value = theme;
-    _isDarkMode.value = theme == 'dark';
-
-    await _storage.write(key: 'theme', value: theme);
-
-    Get.changeThemeMode(_isDarkMode.value ? ThemeMode.dark : ThemeMode.light);
-  }
+  bool get isDarkMode => themeMode.value == ThemeMode.dark;
 }

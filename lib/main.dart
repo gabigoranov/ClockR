@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:get/get.dart';
+import 'package:tempus/controllers/common/app_colors.dart';
 import 'package:tempus/services/audio_service.dart';
 import 'package:tempus/views/clock_screen.dart';
 
@@ -68,7 +69,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: lightTheme,
       darkTheme: darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: ThemeController.to.themeMode.value,
       supportedLocales: const [
         Locale('en', ''),
         Locale('bg', ''),
