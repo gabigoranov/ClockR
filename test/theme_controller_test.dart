@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart' show TestWidgetsFlutterBinding;
 import 'package:mocktail/mocktail.dart';
 import 'package:tempus/controllers/theme_controller.dart';
 import 'package:test/test.dart';
 
-class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}
+import 'common/mock_flutter_secure_storage.dart';
+
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
