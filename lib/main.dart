@@ -3,9 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:tempus/controllers/common/app_colors.dart';
-import 'package:tempus/services/audio_service.dart';
 import 'package:tempus/views/clock_screen.dart';
 
 import 'controllers/common/themes.dart';
@@ -19,11 +18,11 @@ Future<void> main() async {
   await FlutterLocalization.instance.ensureInitialized();
 
 
-  Get.put(ThemeController(), permanent: true);
+  Get.put(ThemeController(const FlutterSecureStorage()), permanent: true);
   Get.put(CountdownTimerController(
-    onPlayerTimeOut: () => print('Player time out!'),
-    onOpponentTimeOut: () => print('Opponent time out!'),
-    onTurnChanged: () => print('Turn changed'),
+    onPlayerTimeOut: () => debugPrint('Player time out!'),
+    onOpponentTimeOut: () => debugPrint('Opponent time out!'),
+    onTurnChanged: () => debugPrint('Turn changed'),
   ), permanent: true);
   await Get.putAsync<TimerController>(() async {
     final controller = TimerController();
