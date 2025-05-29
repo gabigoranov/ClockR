@@ -4,7 +4,6 @@ import 'package:tempus/components/time_control_component.dart';
 import 'package:tempus/controllers/common/control_presets.dart';
 import 'package:tempus/views/settings.dart';
 
-import '../controllers/theme_controller.dart';
 import '../controllers/timer_controller.dart';
 import '../l10n/app_localizations.dart';
 

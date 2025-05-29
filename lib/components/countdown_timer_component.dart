@@ -87,10 +87,17 @@ class _CountdownTimerComponentState extends State<CountdownTimerComponent>
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: GestureDetector(
-        onTapDown: _handleTapDown,
-        onTapUp: _handleTapUp,
-        onTapCancel: _handleTapCancel,
+      child: Listener(
+        onPointerDown: (PointerDownEvent event) {
+          _handleTapDown(TapDownDetails(globalPosition: event.position));
+        },
+        onPointerUp: (details) => _handleTapUp(TapUpDetails(
+          kind: details.kind,
+          globalPosition: details.position,
+        )),
+        onPointerCancel: (PointerCancelEvent event) {
+          _handleTapCancel();
+        },
         child: AnimatedBuilder(
           animation: _animationController,
           builder: (context, child) {

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:tempus/services/locale_service.dart';
 import 'package:tempus/views/clock_screen.dart';
 
 import 'controllers/common/themes.dart';
@@ -18,6 +19,10 @@ Future<void> main() async {
   await FlutterLocalization.instance.ensureInitialized();
 
 
+  Get.put(LocaleService(
+    storage: const FlutterSecureStorage(),
+    // You can customize other parameters here
+  ));
   Get.put(ThemeController(const FlutterSecureStorage()), permanent: true);
   Get.put(CountdownTimerController(
     onPlayerTimeOut: () => debugPrint('Player time out!'),

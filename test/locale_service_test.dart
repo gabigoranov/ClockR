@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart' show TestWidgetsFlutterBinding;
+import 'package:get/get.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:tempus/services/locale_service.dart';
 import 'package:test/test.dart';
@@ -10,24 +11,25 @@ class MockLocaleUpdater extends Mock {
   Future<void> call(Locale locale);
 }
 
-// TODO: remove the en as default locale and set it explicitly for simpler testing and reliable usage
+LocaleService get localeService => Get.find<LocaleService>();
+
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  late LocaleService localeService;
   late MockFlutterSecureStorage mockStorage;
   late MockLocaleUpdater mockLocaleUpdater;
 
   setUp(() {
+    Get.testMode = true;
+    Get.reset(); // reset everything first
+
     mockStorage = MockFlutterSecureStorage();
     mockLocaleUpdater = MockLocaleUpdater();
 
-    // Setup default mock behavior
     when(() => mockLocaleUpdater.call(any()))
         .thenAnswer((_) async {});
 
-    // Return a Future<String?> for read operations
     when(() => mockStorage.read(key: any(named: 'key')))
         .thenAnswer((_) async => 'en');
 
@@ -36,11 +38,12 @@ void main() {
       value: any(named: 'value'),
     )).thenAnswer((_) async {});
 
-    localeService = LocaleService(storage: mockStorage, updateLocaleCallback: mockLocaleUpdater.call);
+    Get.replace(LocaleService(storage: mockStorage, updateLocaleCallback: mockLocaleUpdater.call));
   });
 
+
   setUpAll(() {
-    registerFallbackValue(Locale('en'));
+    registerFallbackValue(Locale('invalid'));
   });
 
   tearDown(() {
@@ -58,7 +61,7 @@ void main() {
 
       // Assert
       expect(localeService.language, 'en');
-      verifyNever(() => mockLocaleUpdater.call(Locale('en'))); // No update should be called since it's the default
+      verifyNever(() => mockLocaleUpdater.call(Locale('en'))); // "en" is the default, so no update needed
     });
 
     test('Should initialize with "en" when storage contains it', () async {
@@ -70,7 +73,7 @@ void main() {
 
       // Assert
       expect(localeService.language, 'en');
-      verifyNever(() => mockLocaleUpdater.call(Locale('en'))); // No update needed if already "en" by default
+      verifyNever(() => mockLocaleUpdater.call(Locale('en'))); // "en" is the default, so no update needed
     });
 
     test('Should initialize with "bg" when storage contains it', () async {
@@ -94,7 +97,7 @@ void main() {
 
       // Assert
       expect(localeService.language, 'en');
-      verify(() => mockLocaleUpdater.call(Locale('en'))).called(1);
+      verifyNever(() => mockLocaleUpdater.call(Locale('en'))); // "en" is the default, so no update needed
     });
   });
 

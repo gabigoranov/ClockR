@@ -14,6 +14,8 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  final LocaleService localeService = Get.find<LocaleService>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +74,7 @@ class _SettingsPageState extends State<SettingsPage> {
           splashColor: Colors.transparent, // No splash effect
           highlightColor: Colors.transparent, // No highlight effect
           hoverColor: Colors.transparent, // No hover effect
-          onTap: () {}, // Empty onTap to maintain clickability
+          onTap: () {}, // Empty onTap to maintain click ability
           child: ExpansionTile(
             title: Text(AppLocalizations.of(context).languageText,
                 style: Get.textTheme.titleMedium?.copyWith(
@@ -86,8 +88,8 @@ class _SettingsPageState extends State<SettingsPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
                 child: Column(
-                  children: LocaleService.instance.languages.entries.map((entry) {
-                    final isSelected = LocaleService.instance.language == entry.key;
+                  children: localeService.languages.entries.map((entry) {
+                    final isSelected = localeService.language == entry.key;
                     return Container(
                       margin: const EdgeInsets.symmetric(vertical: 4),
                       decoration: BoxDecoration(
@@ -117,9 +119,9 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                         trailing: Radio<String>(
                           value: entry.key,
-                          groupValue: LocaleService.instance.language,
+                          groupValue: localeService.language,
                           onChanged: (value) async {
-                            await LocaleService.instance.changeLanguage(value!);
+                            await localeService.changeLanguage(value!);
                           },
                           activeColor: Get.theme.colorScheme.primary,
                           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -128,7 +130,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         onTap: () async {
-                          await LocaleService.instance.changeLanguage(entry.key);
+                          await localeService.changeLanguage(entry.key);
                         },
                       ),
                     );
