@@ -121,12 +121,46 @@ void main() {
       verifyNever(() => mockLocaleUpdater.call(Locale('en'))); // "en" is the default, so no update needed
       verifyNever(() => mockStorage.write(key: 'locale', value: 'en'));
     });
+
+    test('Should not change language if code is invalid', () {
+      expect(
+            () async => await localeService.changeLanguage('invalid'),
+        throwsA(isA<ArgumentError>()),
+      );
+    });
   });
 
-  test('Should not change language if code is invalid', () {
-    expect(
-      () async => await localeService.changeLanguage('invalid'),
-      throwsA(isA<ArgumentError>()),
-    );
+  group('toggle', () {
+    test('Should toggle from "en" to "bg"', () async {
+      // Act
+      await localeService.changeLanguage('en');
+      await localeService.toggle();
+
+      // Assert
+      expect(localeService.language, 'bg');
+      verify(() => mockLocaleUpdater.call(Locale('bg'))).called(1);
+      verify(() => mockStorage.write(key: 'locale', value: 'bg')).called(1);
+    });
+
+    test('Should toggle from "bg" to "en"', () async {
+      // Act
+      await localeService.changeLanguage('bg');
+      await localeService.toggle();
+
+      // Assert
+      expect(localeService.language, 'en');
+      verify(() => mockLocaleUpdater.call(Locale('en'))).called(1);
+      verify(() => mockStorage.write(key: 'locale', value: 'en')).called(1);
+    });
+  });
+
+  group('save', () {
+    test('Should save current locale to storage', () async {
+      // Act
+      await localeService.save();
+
+      // Assert
+      verify(() => mockStorage.write(key: 'locale', value: 'en')).called(1);
+    });
   });
 }

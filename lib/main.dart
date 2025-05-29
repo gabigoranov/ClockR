@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:tempus/services/audio_service.dart';
 import 'package:tempus/services/locale_service.dart';
 import 'package:tempus/views/clock_screen.dart';
 
@@ -18,10 +19,15 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterLocalization.instance.ensureInitialized();
 
+  await _initializeServices();
 
+  runApp(const MyApp());
+}
+
+Future<void> _initializeServices() async {
+  Get.put(AudioService());
   Get.put(LocaleService(
     storage: const FlutterSecureStorage(),
-    // You can customize other parameters here
   ));
   Get.put(ThemeController(const FlutterSecureStorage()), permanent: true);
   Get.put(CountdownTimerController(
@@ -34,8 +40,6 @@ Future<void> main() async {
     await controller.onInit(); // Manually trigger async init
     return controller;
   });
-
-  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {

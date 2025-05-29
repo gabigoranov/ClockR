@@ -24,7 +24,7 @@ class _TimeControlComponentState extends State<TimeControlComponent> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
         decoration: BoxDecoration(
-          color: widget.isSelected ? Colors.blueAccent : Theme.of(context).cardColor,
+          color: widget.isSelected ? Theme.of(context).colorScheme.secondaryContainer : Theme.of(context).cardColor,
           boxShadow: Theme.of(context).brightness == Brightness.light
               ? [
             BoxShadow(
@@ -35,9 +35,9 @@ class _TimeControlComponentState extends State<TimeControlComponent> {
             )
           ]
               : [],
-          border: Theme.of(context).brightness == Brightness.dark
+          border: !widget.isSelected ? Theme.of(context).brightness == Brightness.dark
               ? Border.all(color: Colors.grey[700]!, width: 1)
-              : null,
+              : null : null,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(

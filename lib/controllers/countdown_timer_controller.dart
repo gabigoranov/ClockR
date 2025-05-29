@@ -8,6 +8,8 @@ import '../services/audio_service.dart';
 class CountdownTimerController extends GetxController with GetTickerProviderStateMixin {
   static CountdownTimerController get to => Get.find();
 
+  final audioService = Get.find<AudioService>();
+
   // Reactive state variables
   final playerTime = 0.obs;
   final opponentTime = 0.obs;
@@ -153,7 +155,7 @@ class CountdownTimerController extends GetxController with GetTickerProviderStat
     // Check if we've crossed any threshold from above
     for (final threshold in _beepThresholds) {
       if (time > threshold && time - threshold <= 100) { // Small buffer to account for tick rate
-        await AudioService.playSound('sounds/alarm.wav');
+        await audioService.playSound('sounds/alarm.wav');
       }
     }
   }
@@ -184,10 +186,10 @@ class CountdownTimerController extends GetxController with GetTickerProviderStat
   /// Plays a sound based on whose turn it is.
   Future<void> playRespectiveSound() async {
     if (!isPlayerTurn.value) {
-      await AudioService.playSound('sounds/clock_tap_2.wav');
+      await audioService.playSound('sounds/clock_tap_2.wav');
       return;
     }
-    await AudioService.playSound('sounds/clock_tap_1.wav');
+    await audioService.playSound('sounds/clock_tap_1.wav');
   }
 
   /// Resets the timer to its initial state.

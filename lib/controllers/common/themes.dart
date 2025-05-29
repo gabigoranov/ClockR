@@ -44,7 +44,7 @@ final ThemeData lightTheme = ThemeData(
     ),
   ),
   appBarTheme: const AppBarTheme( // Styling for all AppBars in the app
-    backgroundColor: AppColors.primaryLight,
+    backgroundColor: AppColors.secondaryLight,
     elevation: 2,
     titleTextStyle: TextStyle(
       color: Colors.white,
@@ -117,7 +117,7 @@ final ThemeData darkTheme = ThemeData(
     ),
   ),
   appBarTheme: const AppBarTheme( // Dark mode AppBar styling
-    backgroundColor: AppColors.primaryDark,
+    backgroundColor: AppColors.secondaryDark,
     elevation: 2,
     titleTextStyle: TextStyle(
       color: Colors.white,

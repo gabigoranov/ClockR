@@ -47,7 +47,7 @@ class TimeControlSelectionScreen extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
       decoration: BoxDecoration(
-        color: Colors.blueAccent,
+        color: Theme.of(context).colorScheme.secondaryContainer,
         borderRadius: BorderRadius.circular(12), // Rounded corners
         boxShadow: [
           BoxShadow(

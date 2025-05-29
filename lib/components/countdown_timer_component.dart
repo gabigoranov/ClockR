@@ -66,6 +66,9 @@ class _CountdownTimerComponentState extends State<CountdownTimerComponent>
       _isTapped = true;
       await HapticFeedback.lightImpact();
       await _animationController.forward();
+      await Future.delayed(const Duration(seconds: 5));
+      await _animationController.reverse();
+      _isTapped = false;
     }
   }
 

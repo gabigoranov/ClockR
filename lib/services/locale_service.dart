@@ -57,28 +57,16 @@ final class LocaleService {
 
   /// Toggles the app's locale between English ("en") and Bulgarian ("bg").
   Future<void> toggle() async {
-    // Get the current app locale.
-    final currentLocale = Get.locale?.languageCode;
-
     // Switch to Bulgarian if the current locale is English.
-    if (currentLocale == 'en') {
+    if (_locale == 'en') {
       _locale = 'bg';
       await _updateLocaleCallback(Locale(_locale));
     }
     // Switch to English if the current locale is Bulgarian.
-    else if (currentLocale == 'bg') {
+    else if (_locale == 'bg') {
       _locale = 'en';
       await _updateLocaleCallback(Locale(_locale));
     }
-
-    // Save the updated locale to secure storage.
-    await save();
-  }
-
-  /// Switches the app's language to a specified locale
-  Future<void> setLocale(String locale) async {
-    _locale = locale;
-    await _updateLocaleCallback(Locale(_locale));
 
     // Save the updated locale to secure storage.
     await save();
