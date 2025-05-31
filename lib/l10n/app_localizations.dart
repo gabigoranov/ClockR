@@ -196,6 +196,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Dark Mode'**
   String get darkMode;
+
+  /// No description provided for @addTimeControlTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Time Control'**
+  String get addTimeControlTitle;
+
+  /// No description provided for @saveButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get saveButton;
+
+  /// No description provided for @timeControlNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Control Name'**
+  String get timeControlNameLabel;
+
+  /// No description provided for @timeControlNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Blitz, Rapid, Classical'**
+  String get timeControlNameHint;
+
+  /// No description provided for @timeControlNameError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a name'**
+  String get timeControlNameError;
+
+  /// No description provided for @baseTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Base Time'**
+  String get baseTimeLabel;
+
+  /// No description provided for @minutesSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String minutesSuffix(Object minutes);
+
+  /// No description provided for @secondsSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds} sec'**
+  String secondsSuffix(Object seconds);
+
+  /// No description provided for @incrementLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Increment'**
+  String get incrementLabel;
+
+  /// No description provided for @incrementSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **'{increment} seconds'**
+  String incrementSuffix(Object increment);
+
+  /// No description provided for @previewLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get previewLabel;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

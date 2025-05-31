@@ -6,6 +6,8 @@ import 'package:tempus/views/settings.dart';
 
 import '../controllers/timer_controller.dart';
 import '../l10n/app_localizations.dart';
+import '../services/system_chrome_service.dart';
+import 'add_time_control_screen.dart';
 
 class TimeControlSelectionScreen extends StatelessWidget {
   const TimeControlSelectionScreen({super.key});
@@ -66,7 +68,7 @@ class TimeControlSelectionScreen extends StatelessWidget {
               context: context,
               icon: Icons.add_circle_outline,
               label: AppLocalizations.of(context).newTimeControl,
-              onTap: () => Get.toNamed('/create-time-control'),
+              onTap: () => Get.to(() => const AddTimeControlScreen(), transition: Transition.fade),
             ),
             _buildDivider(),
             _buildActionTile(

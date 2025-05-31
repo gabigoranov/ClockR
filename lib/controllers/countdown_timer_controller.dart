@@ -183,6 +183,16 @@ class CountdownTimerController extends GetxController with GetTickerProviderStat
     _stopOpponentTicker();
   }
 
+  /// UnPauses the timer, starting the current player's ticker.
+  void unPause() {
+    isRunning.value = true;
+    if(isPlayerTurn.value){
+      _startPlayerTicker();
+    } else {
+      _startOpponentTicker();
+    }
+  }
+
   /// Plays a sound based on whose turn it is.
   Future<void> playRespectiveSound() async {
     if (!isPlayerTurn.value) {

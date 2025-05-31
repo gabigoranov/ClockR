@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:tempus/views/clock_screen_portrait.dart';
 
-import '../components/countdown_timer_component.dart';
-import '../components/functions_row_component.dart';
-import '../controllers/countdown_timer_controller.dart';
+import '../services/common/route_observer.dart';
+import '../services/system_chrome_service.dart';
+import 'clock_screen_landscape.dart';
 
 class ClockScreen extends StatefulWidget {
   const ClockScreen({super.key});
@@ -12,61 +12,61 @@ class ClockScreen extends StatefulWidget {
   State<ClockScreen> createState() => _ClockScreenState();
 }
 
-class _ClockScreenState extends State<ClockScreen> {
+class _ClockScreenState extends State<ClockScreen> with RouteAware{
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route is PageRoute) {
+      routeObserver.subscribe(this, route);
+    }
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPush() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SystemChromeService.to.enableFullScreenMode();
+    });
+  }
+
+  @override
+  void didPopNext() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SystemChromeService.to.enableFullScreenMode();
+    });
+  }
+
+  @override
+  void didPushNext() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SystemChromeService.to.disableFullScreenMode();
+    });
+  }
+
+  @override
+  void didPop() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SystemChromeService.to.disableFullScreenMode();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final timerController = CountdownTimerController.to;
-
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Opponent Timer (top)
-            Obx(() => CountdownTimerComponent(
-              isActive: !timerController.isPlayerTurn.value &&
-                  timerController.isRunning.value,
-              onTap: () async{
-                if (!timerController.isRunning.value) {
-                  await timerController.startClock(didPlayerStart: false);
-
-                } else {
-                  if(!timerController.isPlayerTurn.value)
-                  {
-                    await timerController.switchTurn();
-                  }
-                }
-              },
-              onFinished: () => print('Opponent time expired'),
-              rotation: 2,
-              isPlayer: false,
-            )),
-
-            // Control buttons row
-            FunctionsRowComponent(),
-
-            // Player Timer (bottom)
-            Obx(() => CountdownTimerComponent(
-              isActive: timerController.isPlayerTurn.value &&
-                  timerController.isRunning.value,
-              onTap: () async {
-                if (!timerController.isRunning.value) {
-                  await timerController.startClock(didPlayerStart: true);
-                } else {
-                  if(timerController.isPlayerTurn.value)
-                  {
-                    await timerController.switchTurn();
-                  }
-                }
-              },
-              onFinished: () => print('Player time expired'),
-              rotation: 0,
-              isPlayer: true,
-            )),
-          ],
-        ),
-      ),
+    return OrientationBuilder(
+        builder: (context, orientation) {
+          if(orientation == Orientation.portrait) {
+            return const ClockScreenPortrait();
+          }
+          else{
+            return const ClockScreenLandscape();
+          }
+        }
     );
   }
 }

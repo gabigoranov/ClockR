@@ -7,6 +7,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:tempus/services/audio_service.dart';
 import 'package:tempus/services/locale_service.dart';
+import 'package:tempus/services/system_chrome_service.dart';
 import 'package:tempus/views/clock_screen.dart';
 
 import 'controllers/common/themes.dart';
@@ -14,6 +15,7 @@ import 'controllers/countdown_timer_controller.dart';
 import 'controllers/theme_controller.dart';
 import 'controllers/timer_controller.dart';
 import 'l10n/app_localizations.dart';
+import 'services/common/route_observer.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +27,7 @@ Future<void> main() async {
 }
 
 Future<void> _initializeServices() async {
+  Get.put(SystemChromeService());
   Get.put(AudioService());
   Get.put(LocaleService(
     storage: const FlutterSecureStorage(),
@@ -49,6 +52,7 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
+
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
 
@@ -58,6 +62,7 @@ class _MyAppState extends State<MyApp> {
   void initState(){
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +75,7 @@ class _MyAppState extends State<MyApp> {
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: isDarkMode ? Brightness.light : Brightness.dark,
     ));
+
 
     return GetMaterialApp(
       navigatorKey: navigatorKey,
@@ -85,6 +91,7 @@ class _MyAppState extends State<MyApp> {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       title: 'ClockR',
       home: const ClockScreen(),
+      navigatorObservers: [routeObserver],
     );
   }
 }

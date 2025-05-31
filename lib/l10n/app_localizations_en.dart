@@ -58,4 +58,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get darkMode => 'Dark Mode';
+
+  @override
+  String get addTimeControlTitle => 'Add Time Control';
+
+  @override
+  String get saveButton => 'Save';
+
+  @override
+  String get timeControlNameLabel => 'Time Control Name';
+
+  @override
+  String get timeControlNameHint => 'e.g. Blitz, Rapid, Classical';
+
+  @override
+  String get timeControlNameError => 'Please enter a name';
+
+  @override
+  String get baseTimeLabel => 'Base Time';
+
+  @override
+  String minutesSuffix(Object minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String secondsSuffix(Object seconds) {
+    return '$seconds sec';
+  }
+
+  @override
+  String get incrementLabel => 'Increment';
+
+  @override
+  String incrementSuffix(Object increment) {
+    return '$increment seconds';
+  }
+
+  @override
+  String get previewLabel => 'Preview';
 }

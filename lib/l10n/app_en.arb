@@ -18,6 +18,17 @@
   "edit": "Edit",
   "newTimeControl": "Time Control",
   "languageText": "Language",
-  "darkMode": "Dark Mode"
+  "darkMode": "Dark Mode",
+  "addTimeControlTitle": "Add Time Control",
+  "saveButton": "Save",
+  "timeControlNameLabel": "Time Control Name",
+  "timeControlNameHint": "e.g. Blitz, Rapid, Classical",
+  "timeControlNameError": "Please enter a name",
+  "baseTimeLabel": "Base Time",
+  "minutesSuffix": "{minutes} min",
+  "secondsSuffix": "{seconds} sec",
+  "incrementLabel": "Increment",
+  "incrementSuffix": "{increment} seconds",
+  "previewLabel": "Preview"
 
 }

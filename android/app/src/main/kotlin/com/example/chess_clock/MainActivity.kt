@@ -1,4 +1,4 @@
-package com.example.chess_clock
+package com.clockr.chess
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -6,22 +6,22 @@ import 'package:tempus/views/time_control_selection_screen.dart';
 import '../l10n/app_localizations.dart';
 import 'are_you_sure_dialog.dart';
 
-class FunctionsRowComponent extends StatelessWidget {
-  const FunctionsRowComponent({super.key});
+class FunctionsColumnComponent extends StatelessWidget {
+  const FunctionsColumnComponent({super.key});
 
   @override
   Widget build(BuildContext context) {
     final timerController = CountdownTimerController.to;
 
     return Obx(() => Container(
-      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
-      margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 32),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         border: Border.fromBorderSide(BorderSide(color: Colors.black12)),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Row(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -99,7 +99,7 @@ class FunctionsRowComponent extends StatelessWidget {
             },
             tooltip: AppLocalizations.of(context).soundToggle,
           ),
-        ],
+        ].reversed.toList(),
       ),
     ));
   }

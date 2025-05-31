@@ -58,4 +58,43 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get darkMode => 'Тъмен режим';
+
+  @override
+  String get addTimeControlTitle => 'Добавяне на Времеви Контрол';
+
+  @override
+  String get saveButton => 'Запази';
+
+  @override
+  String get timeControlNameLabel => 'Име на Времевия Контрол';
+
+  @override
+  String get timeControlNameHint => 'напр. Блиц, Рапид, Класически';
+
+  @override
+  String get timeControlNameError => 'Моля въведете име';
+
+  @override
+  String get baseTimeLabel => 'Основно Време';
+
+  @override
+  String minutesSuffix(Object minutes) {
+    return '$minutes мин';
+  }
+
+  @override
+  String secondsSuffix(Object seconds) {
+    return '$seconds сек';
+  }
+
+  @override
+  String get incrementLabel => 'Инкремент';
+
+  @override
+  String incrementSuffix(Object increment) {
+    return '$increment секунди';
+  }
+
+  @override
+  String get previewLabel => 'Преглед';
 }

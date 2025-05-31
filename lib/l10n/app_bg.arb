@@ -15,6 +15,17 @@
   "edit": "Редактиране",
   "newTimeControl": "Времеви Контрол",
   "languageText": "Език",
-  "darkMode": "Тъмен режим"
+  "darkMode": "Тъмен режим",
+  "addTimeControlTitle": "Добавяне на Времеви Контрол",
+  "saveButton": "Запази",
+  "timeControlNameLabel": "Име на Времевия Контрол",
+  "timeControlNameHint": "напр. Блиц, Рапид, Класически",
+  "timeControlNameError": "Моля въведете име",
+  "baseTimeLabel": "Основно Време",
+  "minutesSuffix": "{minutes} мин",
+  "secondsSuffix": "{seconds} сек",
+  "incrementLabel": "Инкремент",
+  "incrementSuffix": "{increment} секунди",
+  "previewLabel": "Преглед"
 
 }
