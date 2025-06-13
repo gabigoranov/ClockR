@@ -97,4 +97,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get previewLabel => 'Preview';
+
+  @override
+  String get timeControlNameMinLengthError => 'Please enter a name with at least 3 characters';
+
+  @override
+  String get timeControlNameMaxLengthError => 'Please enter a name with at most 20 characters';
+
+  @override
+  String get error => 'Error';
+
+  @override
+  String get presetExistsError => 'A time control with this time and increment already exists. Would you like to overwrite it?';
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get noCustomControls => 'No custom time controls available';
+
+  @override
+  String get customControls => 'Custom Controls';
 }

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tempus/components/time_control_component.dart';
-import 'package:tempus/controllers/common/control_presets.dart';
 import 'package:tempus/views/settings.dart';
 
 import '../controllers/timer_controller.dart';
 import '../l10n/app_localizations.dart';
-import '../services/system_chrome_service.dart';
 import 'add_time_control_screen.dart';
 
 class TimeControlSelectionScreen extends StatelessWidget {
@@ -26,21 +24,84 @@ class TimeControlSelectionScreen extends StatelessWidget {
       body: Column(
         children: [
           _buildActionBar(context),
+          _buildCustomTimeControlsSection(context, selectedName),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
-              child: ListView.builder(
-                itemCount: timeControlPresets.length,
-                itemBuilder: (context, index) {
-                  return TimeControlComponent(
-                    model: timeControlPresets[index],
-                    isSelected: timeControlPresets[index].name == selectedName,
-                  );
-                },
+              child: Obx(() => ListView.builder(
+                  itemCount: TimerController.timeControlPresets.length,
+                  itemBuilder: (context, index) {
+                    return TimeControlComponent(
+                      model: TimerController.timeControlPresets[index],
+                      isSelected: TimerController.timeControlPresets[index].name == selectedName,
+                    );
+                  },
+                ),
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCustomTimeControlsSection(BuildContext context, String selectedName) {
+    return Container(
+      height: 200,
+      margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: Theme.of(context).brightness == Brightness.light
+            ? [
+          BoxShadow(
+            color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.14),
+            spreadRadius: 0,
+            blurRadius: 6,
+            offset: const Offset(1, 5),
+          )
+        ]
+            : [],
+        border: Theme.of(context).brightness == Brightness.dark
+            ? Border.all(color: Colors.grey[700]!, width: 1)
+            : null,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              AppLocalizations.of(context).customControls,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Expanded(
+              child: Center(
+                child: TimerController.customTimeControls().isEmpty
+                    ? Text(
+                        AppLocalizations.of(context).noCustomControls,
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
+                      )
+                    :
+                ListView.builder(
+                  itemCount: TimerController.customTimeControls().length,
+                  itemBuilder: (context, index) {
+                    return TimeControlComponent(
+                      model: TimerController.customTimeControls()[index],
+                      isSelected: TimerController.customTimeControls()[index].name == selectedName,
+                    );
+                  },
+                )
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

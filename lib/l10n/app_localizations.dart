@@ -262,6 +262,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Preview'**
   String get previewLabel;
+
+  /// No description provided for @timeControlNameMinLengthError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a name with at least 3 characters'**
+  String get timeControlNameMinLengthError;
+
+  /// No description provided for @timeControlNameMaxLengthError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a name with at most 20 characters'**
+  String get timeControlNameMaxLengthError;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get error;
+
+  /// No description provided for @presetExistsError.
+  ///
+  /// In en, this message translates to:
+  /// **'A time control with this time and increment already exists. Would you like to overwrite it?'**
+  String get presetExistsError;
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// No description provided for @noCustomControls.
+  ///
+  /// In en, this message translates to:
+  /// **'No custom time controls available'**
+  String get noCustomControls;
+
+  /// No description provided for @customControls.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Controls'**
+  String get customControls;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

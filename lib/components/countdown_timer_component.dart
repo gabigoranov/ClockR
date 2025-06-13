@@ -10,6 +10,7 @@ class CountdownTimerComponent extends StatefulWidget {
   final VoidCallback onTap;
   final bool isActive;
   final bool isPlayer;
+  final bool isTimeUp;
   final int rotation;
 
   const CountdownTimerComponent({
@@ -17,6 +18,7 @@ class CountdownTimerComponent extends StatefulWidget {
     this.onFinished,
     required this.onTap,
     required this.isActive,
+    required this.isTimeUp,
     required this.rotation,
     required this.isPlayer,
   });
@@ -104,37 +106,33 @@ class _CountdownTimerComponentState extends State<CountdownTimerComponent>
         child: AnimatedBuilder(
           animation: _animationController,
           builder: (context, child) {
-            bool isTimeUp = (widget.isPlayer
-                ? CountdownTimerController.to.playerTime.value
-                : CountdownTimerController.to.opponentTime.value) <= 0;
-
             return Transform.scale(
               scale: _scaleAnimation.value,
               child: Container(
                 margin: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: isTimeUp
+                  color: widget.isTimeUp
                       ? Theme.of(context).colorScheme.errorContainer
                       : widget.isActive
                       ? Theme.of(context).colorScheme.secondaryContainer
                       : Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: isTimeUp
+                    color: widget.isTimeUp
                         ? Get.theme.colorScheme.error
                         : !Get.isDarkMode
                         ? Get.theme.colorScheme.outline.withValues(alpha: 0.3)
                         : Colors.transparent,
-                    width: isTimeUp ? 4 : 1,
+                    width: widget.isTimeUp ? 4 : 1,
                   ),
                   boxShadow: [
-                    if (widget.isActive && !isTimeUp)
+                    if (widget.isActive && !widget.isTimeUp)
                       BoxShadow(
                         color: Get.theme.colorScheme.primary.withValues(alpha: 0.3),
                         blurRadius: 10,
                         spreadRadius: 2,
                       ),
-                    if (!Get.isDarkMode && !isTimeUp && !widget.isActive)
+                    if (!Get.isDarkMode && !widget.isTimeUp && !widget.isActive)
                       BoxShadow(
                         color: Get.theme.colorScheme.outline.withValues(alpha: 0.1),
                         blurRadius: 2,
@@ -144,7 +142,7 @@ class _CountdownTimerComponentState extends State<CountdownTimerComponent>
                 ),
                 child: Stack(
                   children: [
-                    if (widget.isActive && !isTimeUp)
+                    if (widget.isActive && !widget.isTimeUp)
                       Positioned.fill(
                         child: IgnorePointer(
                           child: AnimatedOpacity(
@@ -185,7 +183,7 @@ class _CountdownTimerComponentState extends State<CountdownTimerComponent>
                                   ),
                                 );
                               }),
-                              if (isTimeUp)
+                              if (widget.isTimeUp)
                                 Text(
                                   AppLocalizations.of(context).timeUp,
                                   style: Get.theme.textTheme.titleLarge?.copyWith(

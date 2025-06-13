@@ -26,6 +26,7 @@ class _ClockScreenLandscapeState extends State<ClockScreenLandscape> {
           Obx(() => CountdownTimerComponent(
             isActive: !timerController.isPlayerTurn.value &&
                 timerController.isRunning.value,
+            isTimeUp: timerController.isGameOver.value && timerController.opponentTime.value <= 0,
             onTap: () async{
               if (!timerController.isRunning.value) {
                 await timerController.startClock(didPlayerStart: false);
@@ -49,6 +50,7 @@ class _ClockScreenLandscapeState extends State<ClockScreenLandscape> {
           Obx(() => CountdownTimerComponent(
             isActive: timerController.isPlayerTurn.value &&
                 timerController.isRunning.value,
+            isTimeUp: timerController.isGameOver.value && timerController.playerTime.value <= 0,
             onTap: () async {
               if (!timerController.isRunning.value) {
                 await timerController.startClock(didPlayerStart: true);

@@ -211,6 +211,8 @@ class CountdownTimerController extends GetxController with GetTickerProviderStat
 
     isPlayerTurn.value = true;
     isGameOver.value = false;
+
+    update();
   }
 
   /// Stops the player ticker and resets its state.

@@ -27,6 +27,7 @@ class _ClockScreenPortraitState extends State<ClockScreenPortrait> {
             Obx(() => CountdownTimerComponent(
               isActive: !timerController.isPlayerTurn.value &&
                   timerController.isRunning.value,
+              isTimeUp: timerController.isGameOver.value && timerController.opponentTime.value <= 0,
               onTap: () async{
                 if (!timerController.isRunning.value) {
                   await timerController.startClock(didPlayerStart: false);
@@ -50,6 +51,7 @@ class _ClockScreenPortraitState extends State<ClockScreenPortrait> {
             Obx(() => CountdownTimerComponent(
               isActive: timerController.isPlayerTurn.value &&
                   timerController.isRunning.value,
+              isTimeUp: timerController.isGameOver.value && timerController.playerTime.value <= 0,
               onTap: () async {
                 if (!timerController.isRunning.value) {
                   await timerController.startClock(didPlayerStart: true);

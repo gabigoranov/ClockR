@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tempus/controllers/timer_controller.dart';
-import 'package:tempus/views/time_control_selection_screen.dart';
+import '../components/are_you_sure_dialog.dart';
 import '../l10n/app_localizations.dart';
 import '../models/time_control.dart';
 
@@ -25,16 +25,35 @@ class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
     super.dispose();
   }
 
-  void _submit() {
+  Future<void> _submit() async {
+    debugPrint("Submitting time control: ${_nameController.text.trim()}");
     if (_formKey.currentState!.validate()) {
       final timeControl = TimeControl(
         (_minutes * 60) + _seconds,
         _increment,
         _nameController.text.trim(),
+        isCustom: true,
       );
 
-      TimerController.addPreset(timeControl);
-      Get.to(() => const TimeControlSelectionScreen(), transition: Transition.fade);
+      if(TimerController.presetExists((_minutes * 60) + _seconds, _increment)) {
+        final bool? result = await showAreYouSureDialog(
+          context: context,
+          title: AppLocalizations.of(context).error,
+          content: AppLocalizations.of(context).presetExistsError,
+          confirmText: AppLocalizations.of(context).confirm,
+          cancelText: AppLocalizations.of(context).cancel,
+          confirmColor: Colors.blue, // Custom color for the confirm button
+        );
+
+        if (result == false) {
+          await TimerController.updatePreset(timeControl);
+        }
+      }
+      else{
+        await TimerController.addPreset(timeControl);
+      }
+      Get.back();
+
     }
   }
 
@@ -89,6 +108,12 @@ class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return l10n.timeControlNameError;
+                  }
+                  else if (value.trim().length > 20) {
+                    return l10n.timeControlNameMaxLengthError;
+                  }
+                  else if (value.trim().length < 3) {
+                    return l10n.timeControlNameMinLengthError;
                   }
                   return null;
                 },
@@ -164,7 +189,7 @@ class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
                       TimeControl(
                         (_minutes * 60) + _seconds,
                         _increment,
-                        'Preview',
+                        AppLocalizations.of(context).previewLabel,
                       ).toString(),
                       style: theme.textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.w600,

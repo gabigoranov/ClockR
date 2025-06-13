@@ -97,4 +97,25 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get previewLabel => 'Преглед';
+
+  @override
+  String get timeControlNameMinLengthError => 'Моля въведете име с поне 3 символа';
+
+  @override
+  String get timeControlNameMaxLengthError => 'Моля въведете име с най-много 20 символа';
+
+  @override
+  String get error => 'Грешка';
+
+  @override
+  String get presetExistsError => 'Времеви контрол с това време и инкремент вече съществува. Искате ли да го презапишете?';
+
+  @override
+  String get confirm => 'Потвърди';
+
+  @override
+  String get noCustomControls => 'Няма налични персонализирани времеви контроли';
+
+  @override
+  String get customControls => 'Персонализирани Контроли';
 }
