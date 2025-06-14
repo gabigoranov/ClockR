@@ -108,7 +108,7 @@ class AppLocalizationsBg extends AppLocalizations {
   String get error => 'Грешка';
 
   @override
-  String get presetExistsError => 'Времеви контрол с това време и инкремент вече съществува. Искате ли да го презапишете?';
+  String get presetExistsError => 'Времеви контрол с това име вече съществува. Искате ли да го презапишете?';
 
   @override
   String get confirm => 'Потвърди';

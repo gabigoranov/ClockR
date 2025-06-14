@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tempus/controllers/theme_controller.dart';
-import 'package:tempus/controllers/timer_controller.dart';
+import 'package:tempus/controllers/time_control_controller.dart';
 
 import '../controllers/common/icons.dart';
 import '../models/time_control.dart';
@@ -67,7 +67,7 @@ class _TimeControlComponentState extends State<TimeControlComponent> {
         ),
       ),
       onTap: () {
-        TimerController.choosePreset(widget.model.name);
+        TimeControlController.choosePreset(widget.model.name);
         Get.to(() => const ClockScreen(), transition: Transition.fade);
       },
     );

@@ -108,7 +108,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get error => 'Error';
 
   @override
-  String get presetExistsError => 'A time control with this time and increment already exists. Would you like to overwrite it?';
+  String get presetExistsError => 'A time control with this name already exists. Would you like to overwrite it?';
 
   @override
   String get confirm => 'Confirm';

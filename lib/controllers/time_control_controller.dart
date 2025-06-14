@@ -1,13 +1,15 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:tempus/controllers/countdown_timer_controller.dart';
 
+import '../components/time_control_component.dart';
 import '../models/time_control.dart';
 
-class TimerController extends GetxController {
-  static TimerController get to => Get.find();
+class TimeControlController extends GetxController {
+  static TimeControlController get to => Get.find();
 
 
   static final timeControlPresets = [
@@ -95,18 +97,35 @@ class TimerController extends GetxController {
 
   /// Update an existing preset
   static Future<void> updatePreset(TimeControl timeControl) async {
-    var index = timeControlPresets.indexWhere((x) => x.increment == timeControl.increment && x.seconds == timeControl.seconds);
+    var index = timeControlPresets.indexWhere((x) => x.name == timeControl.name);
     if (index != -1) {
       timeControlPresets[index] = timeControl;
       await savePresets();
     }
   }
 
-  /// Gets the custom time controls
+  /// Builds a list of time control presets as widgets
+  static List<Widget> buildTimeControlWidgets(List<TimeControl> timeControls, {String? selectedPreset}) {
+    return timeControls.map((x) {
+      return TimeControlComponent(
+        key: ValueKey(x.name),
+        model: x,
+        isSelected: selectedPreset == x.name,
+      );
+    }).toList();
+  }
 
+
+  /// Gets the custom time controls
   static List<TimeControl> customTimeControls() {
     return timeControlPresets.where((x) => x.isCustom).toList();
   }
+
+  /// Gets the default time controls
+  static List<TimeControl> defaultTimeControls() {
+    return timeControlPresets.where((x) => !x.isCustom).toList();
+  }
+
 
   /// Remove a preset by name
   static Future<void> removePreset(String name) async {
@@ -119,26 +138,35 @@ class TimerController extends GetxController {
     return timeControlPresets.singleWhere((x) => x.name == name);
   }
 
-  /// Checks if a preset exists by seconds and increment
-  static bool presetExists(int seconds, int increment) {
-    return timeControlPresets.any((x) => x.seconds == seconds && x.increment == increment);
+  /// Check if a preset exists by name
+  static bool presetExists(String name) {
+    return timeControlPresets.any((x) => x.name == name);
   }
 
   /// Save the presets to persistent storage
   static Future<void> savePresets() async {
+    timeControlPresets.refresh();
     await _storage.write(key: "time_controls", value: jsonEncode(timeControlPresets));
   }
 
   /// Reads the presets from persistent storage
   static Future<void> readPresets() async {
+    //await _storage.delete(key: "time_controls");
     var read = await _storage.read(key: "time_controls");
 
     if(read != null){
       List<dynamic> decoded = jsonDecode(read);
       timeControlPresets.clear();
       decoded.forEach((value) {
-        timeControlPresets.add(TimeControl(value['seconds'], value['increment'], value['name']));
+        timeControlPresets.add(TimeControl(value['seconds'], value['increment'], value['name'], isCustom:  value['isCustom']));
       });
     }
   }
+
+  static Future<void> reorderTimeControls(int oldIndex, int newIndex) async{
+    final item = timeControlPresets.removeAt(oldIndex);
+    timeControlPresets.insert(newIndex, item);
+    await savePresets();
+  }
+
 }

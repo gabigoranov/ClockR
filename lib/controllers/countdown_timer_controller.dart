@@ -1,6 +1,6 @@
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
-import 'package:tempus/controllers/timer_controller.dart';
+import 'package:tempus/controllers/time_control_controller.dart';
 
 import '../services/audio_service.dart';
 
@@ -45,7 +45,7 @@ class CountdownTimerController extends GetxController with GetTickerProviderStat
   @override
   void onInit() {
     super.onInit();
-    initialize(TimerController.currentTimeControl.value.seconds, TimerController.currentTimeControl.value.increment); // Default to 5 minutes
+    initialize(TimeControlController.currentTimeControl.value.seconds, TimeControlController.currentTimeControl.value.increment); // Default to 5 minutes
   }
 
   /// Initializes the timer with the given initial time in seconds and increment in miliseconds.

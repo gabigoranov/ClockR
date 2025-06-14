@@ -13,7 +13,7 @@ import 'package:tempus/views/clock_screen.dart';
 import 'controllers/common/themes.dart';
 import 'controllers/countdown_timer_controller.dart';
 import 'controllers/theme_controller.dart';
-import 'controllers/timer_controller.dart';
+import 'controllers/time_control_controller.dart';
 import 'l10n/app_localizations.dart';
 import 'services/common/route_observer.dart';
 
@@ -38,8 +38,8 @@ Future<void> _initializeServices() async {
     onOpponentTimeOut: () => debugPrint('Opponent time out!'),
     onTurnChanged: () => debugPrint('Turn changed'),
   ), permanent: true);
-  await Get.putAsync<TimerController>(() async {
-    final controller = TimerController();
+  await Get.putAsync<TimeControlController>(() async {
+    final controller = TimeControlController();
     await controller.onInit(); // Manually trigger async init
     return controller;
   });

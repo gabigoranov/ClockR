@@ -33,7 +33,7 @@
   "timeControlNameMinLengthError": "Please enter a name with at least 3 characters",
   "timeControlNameMaxLengthError": "Please enter a name with at most 20 characters",
   "error": "Error",
-  "presetExistsError": "A time control with this time and increment already exists. Would you like to overwrite it?",
+  "presetExistsError": "A time control with this name already exists. Would you like to overwrite it?",
   "confirm": "Confirm",
   "noCustomControls": "No custom time controls available",
   "customControls": "Custom Controls"

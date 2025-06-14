@@ -284,7 +284,7 @@ abstract class AppLocalizations {
   /// No description provided for @presetExistsError.
   ///
   /// In en, this message translates to:
-  /// **'A time control with this time and increment already exists. Would you like to overwrite it?'**
+  /// **'A time control with this name already exists. Would you like to overwrite it?'**
   String get presetExistsError;
 
   /// No description provided for @confirm.

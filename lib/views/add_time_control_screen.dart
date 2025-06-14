@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tempus/controllers/timer_controller.dart';
+import 'package:tempus/controllers/time_control_controller.dart';
 import '../components/are_you_sure_dialog.dart';
 import '../l10n/app_localizations.dart';
 import '../models/time_control.dart';
@@ -35,7 +35,7 @@ class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
         isCustom: true,
       );
 
-      if(TimerController.presetExists((_minutes * 60) + _seconds, _increment)) {
+      if(TimeControlController.presetExists(_nameController.text.trim())) {
         final bool? result = await showAreYouSureDialog(
           context: context,
           title: AppLocalizations.of(context).error,
@@ -45,15 +45,15 @@ class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
           confirmColor: Colors.blue, // Custom color for the confirm button
         );
 
-        if (result == false) {
-          await TimerController.updatePreset(timeControl);
+        if (result == true) {
+          await TimeControlController.updatePreset(timeControl);
+          Get.back();
         }
       }
       else{
-        await TimerController.addPreset(timeControl);
+        await TimeControlController.addPreset(timeControl);
+        Get.back();
       }
-      Get.back();
-
     }
   }
 
