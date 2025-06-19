@@ -26,7 +26,6 @@ class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
   }
 
   Future<void> _submit() async {
-    debugPrint("Submitting time control: ${_nameController.text.trim()}");
     if (_formKey.currentState!.validate()) {
       final timeControl = TimeControl(
         (_minutes * 60) + _seconds,
@@ -35,22 +34,21 @@ class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
         isCustom: true,
       );
 
-      if(TimeControlController.presetExists(_nameController.text.trim())) {
+      if (TimeControlController.presetExists(_nameController.text.trim())) {
         final bool? result = await showAreYouSureDialog(
           context: context,
           title: AppLocalizations.of(context).error,
           content: AppLocalizations.of(context).presetExistsError,
           confirmText: AppLocalizations.of(context).confirm,
           cancelText: AppLocalizations.of(context).cancel,
-          confirmColor: Colors.blue, // Custom color for the confirm button
+          confirmColor: Theme.of(context).colorScheme.primary,
         );
 
         if (result == true) {
           await TimeControlController.updatePreset(timeControl);
           Get.back();
         }
-      }
-      else{
+      } else {
         await TimeControlController.addPreset(timeControl);
         Get.back();
       }
@@ -77,7 +75,7 @@ class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(24),
         child: Form(
           key: _formKey,
           child: Column(
@@ -85,45 +83,67 @@ class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
             children: [
               // Name Field
               Text(
-                l10n.timeControlNameLabel,
-                style: theme.textTheme.labelLarge?.copyWith(
-                  color: colorScheme.onSurface.withValues(alpha: 0.8),
+                l10n.timeControlNameLabel.toUpperCase(),
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: colorScheme.onSurface.withValues(alpha: 0.6),
+                  letterSpacing: 1.2,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _nameController,
+                style: theme.textTheme.bodyLarge,
                 decoration: InputDecoration(
                   hintText: l10n.timeControlNameHint,
                   filled: true,
+                  fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(14),
                     borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: BorderSide(
+                      color: colorScheme.outline.withValues(alpha: 0.3),
+                      width: 1,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: BorderSide(
+                      color: colorScheme.primary,
+                      width: 2,
+                    ),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16,
-                    vertical: 14,
+                    vertical: 16,
+                  ),
+                  prefixIcon: Icon(
+                    Icons.timer_outlined,
+                    color: colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return l10n.timeControlNameError;
-                  }
-                  else if (value.trim().length > 20) {
+                  } else if (value.trim().length > 20) {
                     return l10n.timeControlNameMaxLengthError;
-                  }
-                  else if (value.trim().length < 3) {
+                  } else if (value.trim().length < 3) {
                     return l10n.timeControlNameMinLengthError;
                   }
                   return null;
                 },
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 28),
 
               // Base Time Section
               Text(
-                l10n.baseTimeLabel,
-                style: theme.textTheme.titleMedium?.copyWith(
+                l10n.baseTimeLabel.toUpperCase(),
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: colorScheme.onSurface.withValues(alpha: 0.6),
+                  letterSpacing: 1.2,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -138,7 +158,7 @@ class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
                       onChanged: (value) => setState(() => _minutes = value!),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: _TimeDropdown(
                       value: _seconds,
@@ -149,12 +169,14 @@ class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 28),
 
               // Increment Section
               Text(
-                l10n.incrementLabel,
-                style: theme.textTheme.titleMedium?.copyWith(
+                l10n.incrementLabel.toUpperCase(),
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: colorScheme.onSurface.withValues(alpha: 0.6),
+                  letterSpacing: 1.2,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -170,21 +192,35 @@ class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
               // Preview Card
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: colorScheme.surface.withValues(alpha: 0.4),
-                  borderRadius: BorderRadius.circular(12),
+                  color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: colorScheme.outline.withValues(alpha: 0.2),
+                    width: 1,
+                  ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      l10n.previewLabel,
-                      style: theme.textTheme.labelLarge?.copyWith(
-                        color: colorScheme.onSurface.withValues(alpha: 0.6),
-                      ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.visibility_outlined,
+                          size: 18,
+                          color: colorScheme.onSurface.withValues(alpha: 0.6),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          l10n.previewLabel,
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            color: colorScheme.onSurface.withValues(alpha: 0.6),
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 12),
                     Text(
                       TimeControl(
                         (_minutes * 60) + _seconds,
@@ -192,7 +228,8 @@ class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
                         AppLocalizations.of(context).previewLabel,
                       ).toString(),
                       style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
+                        color: colorScheme.primary,
                       ),
                     ),
                   ],
@@ -222,35 +259,67 @@ class _TimeDropdown<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
-    return DropdownButtonFormField<T>(
-      value: value,
-      items: items.map((item) => DropdownMenuItem(
-        value: item,
-        child: Text(
-          labelBuilder(item),
-          style: theme.textTheme.bodyLarge,
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.shadow.withValues(alpha: 0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: DropdownButtonFormField<T>(
+        value: value,
+        items: items.map((item) => DropdownMenuItem(
+          value: item,
+          child: Text(
+            labelBuilder(item),
+            style: theme.textTheme.bodyLarge?.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        )).toList(),
+        onChanged: onChanged,
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: BorderSide(
+              color: colorScheme.outline.withValues(alpha: 0.3),
+              width: 1,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: BorderSide(
+              color: colorScheme.primary,
+              width: 2,
+            ),
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
         ),
-      )).toList(),
-      onChanged: onChanged,
-      decoration: InputDecoration(
-        filled: true,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+        borderRadius: BorderRadius.circular(14),
+        dropdownColor: colorScheme.surface,
+        icon: Icon(
+          Icons.arrow_drop_down,
+          color: colorScheme.onSurface.withValues(alpha: 0.6),
         ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 12,
+        style: theme.textTheme.bodyLarge?.copyWith(
+          fontWeight: FontWeight.w500,
         ),
       ),
-      borderRadius: BorderRadius.circular(12),
-      dropdownColor: theme.colorScheme.surface,
-      icon: Icon(
-        Icons.arrow_drop_down,
-        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-      ),
-      style: theme.textTheme.bodyLarge,
     );
   }
 }

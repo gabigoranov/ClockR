@@ -56,7 +56,7 @@ class _SettingsPageState extends State<SettingsPage> {
             color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.14),
             spreadRadius: 0,
             blurRadius: 6,
-            offset: const Offset(1, 5),
+            offset: const Offset(0.1, 0.5),
           )
         ]
             : [],
@@ -102,7 +102,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             BoxShadow(
                               color: Colors.black.withValues(alpha: 0.03),
                               blurRadius: 4,
-                              offset: const Offset(0, 1),
+                              offset: const Offset(0, 0.1),
                             ),
                         ],
                       ),
@@ -154,7 +154,7 @@ class _SettingsPageState extends State<SettingsPage> {
             color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.14),
             spreadRadius: 0,
             blurRadius: 6,
-            offset: const Offset(1, 5),
+            offset: const Offset(0.1, 0.5),
           )
         ]
             : [],

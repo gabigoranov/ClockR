@@ -18,7 +18,7 @@ class AppColors {
   static const Color primaryDark = Colors.blueAccent;
 
   // Secondary colors
-  static const Color secondaryLight = Color(0xff82B1FF); // Lighter blue
+  static const Color secondaryLight = Color(0xff5183e1); // Lighter blue
   static const Color secondaryDark = Color(0xff2962FF); // Darker blue
 
   // Accent colors

@@ -33,6 +33,16 @@
   "presetExistsError": "Времеви контрол с това име вече съществува. Искате ли да го презапишете?",
   "confirm": "Потвърди",
   "noCustomControls": "Няма налични персонализирани времеви контроли",
-  "customControls": "Персонализирани Контроли"
+  "customControls": "Персонализирани Контроли",
+  "updateAvailableTitle": "Налична актуализация",
+  "updateAvailableMessage": "Налична е нова версия на приложението. Моля, актуализирайте, за да се възползвате от най-новите функции.",
+  "versionInfo": "Информация за версията: {versionCode}",
+  "laterButton": "По-късно",
+  "performImmediateUpdate": "Инсталирай сега",
+  "startFlexibleUpdate": "Изтегли актуализация",
+  "completeFlexibleUpdate": "Инсталирай изтеглената актуализация",
+  "updateSnackbarSuccess": "Актуализацията е успешна!",
+  "updateSnackbarFailure": "Актуализацията неуспешна: {error}",
+  "save": "Запазване"
 
 }

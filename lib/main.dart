@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:tempus/components/app_update_available_dialog.dart';
+import 'package:tempus/services/app_update_service.dart';
 import 'package:tempus/services/audio_service.dart';
 import 'package:tempus/services/locale_service.dart';
 import 'package:tempus/services/system_chrome_service.dart';
@@ -27,6 +29,7 @@ Future<void> main() async {
 }
 
 Future<void> _initializeServices() async {
+  Get.put(AppUpdateService());
   Get.put(SystemChromeService());
   Get.put(AudioService());
   Get.put(LocaleService(
@@ -59,7 +62,10 @@ class _MyAppState extends State<MyApp> {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override
-  void initState(){
+  void initState() {
+    final updateInfo = AppUpdateService.to.checkForUpdate();
+    showUpdateDialog(context: context, updateInfoFuture: updateInfo);
+
     super.initState();
   }
 

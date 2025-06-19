@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tempus/components/time_control_component.dart';
@@ -43,23 +45,48 @@ class _TimeControlSelectionScreenState extends State<TimeControlSelectionScreen>
     return Obx(() {
       final timeControls = TimeControlController.defaultTimeControls();
 
+      final List<TimeControlComponent> cards = <TimeControlComponent>[
+        for (int index = 0; index < timeControls.length; index += 1)
+          TimeControlComponent(
+            key: ValueKey(timeControls[index].name),
+            model: timeControls[index],
+            isSelected: timeControls[index].name == selectedName,
+          ),
+      ];
+
+      Widget proxyDecorator(Widget child, int index, Animation<double> animation) {
+        return AnimatedBuilder(
+          animation: animation,
+          builder: (BuildContext context, Widget? child) {
+            final double animValue = Curves.easeInOut.transform(animation.value);
+            final double elevation = lerpDouble(1, 6, animValue)!;
+            final double scale = lerpDouble(1, 1.02, animValue)!;
+            return Transform.scale(
+              scale: scale,
+              // Create a Card based on the color and the content of the dragged one
+              // and set its elevation to the animated value.
+              child: TimeControlComponent(
+                key: ValueKey(timeControls[index].name),
+                model: timeControls[index],
+                isSelected: timeControls[index].name == selectedName,
+              ),
+            );
+          },
+          child: child,
+        );
+      }
+
       return Container(
         margin: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-        child: ReorderableListView.builder(
+        child: ReorderableListView(
           padding: const EdgeInsets.symmetric(horizontal: 4),
+          proxyDecorator: proxyDecorator,
           onReorder: (int oldIndex, int newIndex) async {
             if (oldIndex < newIndex) newIndex -= 1;
             debugPrint("Reordering from $oldIndex to $newIndex");
             await TimeControlController.reorderTimeControls(oldIndex, newIndex);
           },
-          itemCount: timeControls.length,
-          itemBuilder: (context, index) {
-            return TimeControlComponent(
-              key: ValueKey(timeControls[index].name),
-              model: timeControls[index],
-              isSelected: timeControls[index].name == selectedName,
-            );
-          },
+          children: cards,
         ),
       );
     });
@@ -78,7 +105,7 @@ class _TimeControlSelectionScreenState extends State<TimeControlSelectionScreen>
               color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.14),
               spreadRadius: 0,
               blurRadius: 6,
-              offset: const Offset(1, 5),
+              offset: const Offset(0.1, 0.5),
             )
           ]
               : [],

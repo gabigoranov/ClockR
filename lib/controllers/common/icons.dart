@@ -1,10 +1,4 @@
-import 'dart:ui';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
-
-import '../theme_controller.dart';
 
 final icons = {
   "bullet": SvgPicture.asset(

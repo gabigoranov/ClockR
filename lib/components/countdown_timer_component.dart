@@ -121,7 +121,7 @@ class _CountdownTimerComponentState extends State<CountdownTimerComponent>
                     color: widget.isTimeUp
                         ? Get.theme.colorScheme.error
                         : !Get.isDarkMode
-                        ? Get.theme.colorScheme.outline.withValues(alpha: 0.3)
+                        ? Get.theme.colorScheme.outline.withValues(alpha: 0.1)
                         : Colors.transparent,
                     width: widget.isTimeUp ? 4 : 1,
                   ),
@@ -129,14 +129,14 @@ class _CountdownTimerComponentState extends State<CountdownTimerComponent>
                     if (widget.isActive && !widget.isTimeUp)
                       BoxShadow(
                         color: Get.theme.colorScheme.primary.withValues(alpha: 0.3),
-                        blurRadius: 10,
-                        spreadRadius: 2,
+                        blurRadius: 0.10,
+                        spreadRadius: 0.2,
                       ),
                     if (!Get.isDarkMode && !widget.isTimeUp && !widget.isActive)
                       BoxShadow(
                         color: Get.theme.colorScheme.outline.withValues(alpha: 0.1),
-                        blurRadius: 2,
-                        spreadRadius: 1,
+                        blurRadius: 0.2,
+                        spreadRadius: 0.1,
                       ),
                   ],
                 ),

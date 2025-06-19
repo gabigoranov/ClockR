@@ -304,6 +304,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Custom Controls'**
   String get customControls;
+
+  /// Title shown when an app update is available
+  ///
+  /// In en, this message translates to:
+  /// **'Update Available'**
+  String get updateAvailableTitle;
+
+  /// Message explaining that an update is available
+  ///
+  /// In en, this message translates to:
+  /// **'A new version of the app is available. Please update to enjoy the latest features.'**
+  String get updateAvailableMessage;
+
+  /// Shows the available version code
+  ///
+  /// In en, this message translates to:
+  /// **'Version info: {versionCode}'**
+  String versionInfo(String versionCode);
+
+  /// Button to postpone the update
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get laterButton;
+
+  /// Button to perform immediate update
+  ///
+  /// In en, this message translates to:
+  /// **'Install Now'**
+  String get performImmediateUpdate;
+
+  /// Button to start flexible update download
+  ///
+  /// In en, this message translates to:
+  /// **'Download Update'**
+  String get startFlexibleUpdate;
+
+  /// Button to complete flexible update installation
+  ///
+  /// In en, this message translates to:
+  /// **'Install Downloaded Update'**
+  String get completeFlexibleUpdate;
+
+  /// Message shown when update completes successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Update successful!'**
+  String get updateSnackbarSuccess;
+
+  /// Message shown when update fails
+  ///
+  /// In en, this message translates to:
+  /// **'Update failed: {error}'**
+  String updateSnackbarFailure(String error);
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -118,4 +118,38 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get customControls => 'Custom Controls';
+
+  @override
+  String get updateAvailableTitle => 'Update Available';
+
+  @override
+  String get updateAvailableMessage => 'A new version of the app is available. Please update to enjoy the latest features.';
+
+  @override
+  String versionInfo(String versionCode) {
+    return 'Version info: $versionCode';
+  }
+
+  @override
+  String get laterButton => 'Later';
+
+  @override
+  String get performImmediateUpdate => 'Install Now';
+
+  @override
+  String get startFlexibleUpdate => 'Download Update';
+
+  @override
+  String get completeFlexibleUpdate => 'Install Downloaded Update';
+
+  @override
+  String get updateSnackbarSuccess => 'Update successful!';
+
+  @override
+  String updateSnackbarFailure(String error) {
+    return 'Update failed: $error';
+  }
+
+  @override
+  String get save => 'Save';
 }

@@ -36,6 +36,55 @@
   "presetExistsError": "A time control with this name already exists. Would you like to overwrite it?",
   "confirm": "Confirm",
   "noCustomControls": "No custom time controls available",
-  "customControls": "Custom Controls"
+  "customControls": "Custom Controls",
+  "updateAvailableTitle": "Update Available",
+  "@updateAvailableTitle": {
+    "description": "Title shown when an app update is available"
+  },
+  "updateAvailableMessage": "A new version of the app is available. Please update to enjoy the latest features.",
+  "@updateAvailableMessage": {
+    "description": "Message explaining that an update is available"
+  },
+  "versionInfo": "Version info: {versionCode}",
+  "@versionInfo": {
+    "description": "Shows the available version code",
+    "placeholders": {
+      "versionCode": {
+        "type": "String",
+        "example": "123"
+      }
+    }
+  },
+  "laterButton": "Later",
+  "@laterButton": {
+    "description": "Button to postpone the update"
+  },
+  "performImmediateUpdate": "Install Now",
+  "@performImmediateUpdate": {
+    "description": "Button to perform immediate update"
+  },
+  "startFlexibleUpdate": "Download Update",
+  "@startFlexibleUpdate": {
+    "description": "Button to start flexible update download"
+  },
+  "completeFlexibleUpdate": "Install Downloaded Update",
+  "@completeFlexibleUpdate": {
+    "description": "Button to complete flexible update installation"
+  },
+  "updateSnackbarSuccess": "Update successful!",
+  "@updateSnackbarSuccess": {
+    "description": "Message shown when update completes successfully"
+  },
+  "updateSnackbarFailure": "Update failed: {error}",
+  "@updateSnackbarFailure": {
+    "description": "Message shown when update fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Network error"
+      }
+    }
+  },
+  "save": "Save"
 
 }

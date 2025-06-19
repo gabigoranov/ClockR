@@ -31,7 +31,7 @@ class _TimeControlComponentState extends State<TimeControlComponent> {
               color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.14),
               spreadRadius: 0,
               blurRadius: 6,
-              offset: const Offset(1, 5),
+              offset: const Offset(0.1, 0.5),
             )
           ]
               : [],

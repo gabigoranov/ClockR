@@ -118,4 +118,38 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get customControls => 'Персонализирани Контроли';
+
+  @override
+  String get updateAvailableTitle => 'Налична актуализация';
+
+  @override
+  String get updateAvailableMessage => 'Налична е нова версия на приложението. Моля, актуализирайте, за да се възползвате от най-новите функции.';
+
+  @override
+  String versionInfo(String versionCode) {
+    return 'Информация за версията: $versionCode';
+  }
+
+  @override
+  String get laterButton => 'По-късно';
+
+  @override
+  String get performImmediateUpdate => 'Инсталирай сега';
+
+  @override
+  String get startFlexibleUpdate => 'Изтегли актуализация';
+
+  @override
+  String get completeFlexibleUpdate => 'Инсталирай изтеглената актуализация';
+
+  @override
+  String get updateSnackbarSuccess => 'Актуализацията е успешна!';
+
+  @override
+  String updateSnackbarFailure(String error) {
+    return 'Актуализацията неуспешна: $error';
+  }
+
+  @override
+  String get save => 'Запазване';
 }
