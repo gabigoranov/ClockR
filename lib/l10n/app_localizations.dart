@@ -364,6 +364,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save'**
   String get save;
+
+  /// No description provided for @select.
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get select;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @deleteTimeControlTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Time Control'**
+  String get deleteTimeControlTitle;
+
+  /// No description provided for @deleteTimeControlConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this time control?'**
+  String get deleteTimeControlConfirmation;
+
+  /// No description provided for @editTimeControlTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Time Control'**
+  String get editTimeControlTitle;
+
+  /// No description provided for @colorScheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Color Scheme'**
+  String get colorScheme;
+
+  /// No description provided for @primaryColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Primary Color'**
+  String get primaryColor;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -1,10 +1,10 @@
 class TimeControl {
-  final int seconds;
-  final int increment;
-  final String name;
-  final bool isCustom;
+  int seconds;
+  int increment;
+  String name;
+  bool isCustom;
 
-  const TimeControl(this.seconds, this.increment, this.name, {this.isCustom = false});
+  TimeControl(this.seconds, this.increment, this.name, {this.isCustom = false});
 
   @override
   String toString() {

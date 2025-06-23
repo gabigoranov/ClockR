@@ -152,4 +152,25 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get save => 'Запазване';
+
+  @override
+  String get select => 'Избери';
+
+  @override
+  String get delete => 'Изтрий';
+
+  @override
+  String get deleteTimeControlTitle => 'Изтриване на Времеви Контрол';
+
+  @override
+  String get deleteTimeControlConfirmation => 'Сигурни ли сте, че искате да изтриете този времеви контрол?';
+
+  @override
+  String get editTimeControlTitle => 'Редактирай Времеви Контрол';
+
+  @override
+  String get colorScheme => 'Цветова Схема';
+
+  @override
+  String get primaryColor => 'Основен Цвят';
 }

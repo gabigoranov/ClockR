@@ -45,7 +45,7 @@ class CountdownTimerController extends GetxController with GetTickerProviderStat
   @override
   void onInit() {
     super.onInit();
-    initialize(TimeControlController.currentTimeControl.value.seconds, TimeControlController.currentTimeControl.value.increment); // Default to 5 minutes
+    initialize(TimeControlController.activeTimeControl.value.seconds, TimeControlController.activeTimeControl.value.increment); // Default to 5 minutes
   }
 
   /// Initializes the timer with the given initial time in seconds and increment in miliseconds.

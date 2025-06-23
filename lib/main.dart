@@ -12,6 +12,7 @@ import 'package:tempus/services/locale_service.dart';
 import 'package:tempus/services/system_chrome_service.dart';
 import 'package:tempus/views/clock_screen.dart';
 
+import 'controllers/app_colors_controller.dart';
 import 'controllers/common/themes.dart';
 import 'controllers/countdown_timer_controller.dart';
 import 'controllers/theme_controller.dart';
@@ -29,23 +30,24 @@ Future<void> main() async {
 }
 
 Future<void> _initializeServices() async {
+  Get.put(AppColorsController(const FlutterSecureStorage()), permanent: true);
+  Get.put(ThemeController(const FlutterSecureStorage()), permanent: true);
   Get.put(AppUpdateService());
   Get.put(SystemChromeService());
   Get.put(AudioService());
   Get.put(LocaleService(
     storage: const FlutterSecureStorage(),
   ));
-  Get.put(ThemeController(const FlutterSecureStorage()), permanent: true);
-  Get.put(CountdownTimerController(
-    onPlayerTimeOut: () => debugPrint('Player time out!'),
-    onOpponentTimeOut: () => debugPrint('Opponent time out!'),
-    onTurnChanged: () => debugPrint('Turn changed'),
-  ), permanent: true);
   await Get.putAsync<TimeControlController>(() async {
     final controller = TimeControlController();
     await controller.onInit(); // Manually trigger async init
     return controller;
   });
+  Get.put(CountdownTimerController(
+    onPlayerTimeOut: () => debugPrint('Player time out!'),
+    onOpponentTimeOut: () => debugPrint('Opponent time out!'),
+    onTurnChanged: () => debugPrint('Turn changed'),
+  ), permanent: true);
 }
 
 class MyApp extends StatefulWidget {
@@ -83,21 +85,20 @@ class _MyAppState extends State<MyApp> {
     ));
 
 
-    return GetMaterialApp(
-      navigatorKey: navigatorKey,
-      translations: AppTranslations(),
-      debugShowCheckedModeBanner: false,
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: ThemeController.to.themeMode.value,
-      supportedLocales: const [
-        Locale('en', ''),
-        Locale('bg', ''),
-      ],
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      title: 'ClockR',
-      home: const ClockScreen(),
-      navigatorObservers: [routeObserver],
+    return Obx(() => GetMaterialApp(
+        navigatorKey: navigatorKey,
+        translations: AppTranslations(),
+        debugShowCheckedModeBanner: false,
+        theme: ThemeController.to.themeData.value,
+        supportedLocales: const [
+          Locale('en', ''),
+          Locale('bg', ''),
+        ],
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        title: 'ClockR',
+        home: const ClockScreen(),
+        navigatorObservers: [routeObserver],
+      ),
     );
   }
 }

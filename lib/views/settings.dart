@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tempus/components/color_picker_componenet.dart';
+import 'package:tempus/controllers/app_colors_controller.dart';
 import 'package:tempus/controllers/theme_controller.dart';
 import 'package:tempus/l10n/app_localizations.dart';
 import '../services/locale_service.dart';
@@ -37,6 +39,8 @@ class _SettingsPageState extends State<SettingsPage> {
               _buildDarkModeTile(
                 context,
               ),
+              const SizedBox(height: 10),
+              _buildColorSchemeTile(context),
 
 
             ],
@@ -45,6 +49,64 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
   }
+  Widget _buildColorSchemeTile(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Get.theme.scaffoldBackgroundColor,
+        boxShadow: Theme.of(context).brightness == Brightness.light
+            ? [
+          BoxShadow(
+            color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.14),
+            spreadRadius: 0,
+            blurRadius: 6,
+            offset: const Offset(0.1, 0.5),
+          )
+        ]
+            : [],
+        border: Theme.of(context).brightness == Brightness.dark
+            ? Border.all(color: Colors.grey[700]!, width: 1)
+            : null,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Theme(
+        data: Get.theme.copyWith(
+          dividerColor: Colors.transparent,
+          splashFactory: NoSplash.splashFactory,
+        ),
+        child: ExpansionTile(
+          initiallyExpanded: false,
+          tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          childrenPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          title: Text(
+            AppLocalizations.of(context).colorScheme,
+            style: Get.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          leading: Icon(Icons.color_lens, color: Get.theme.colorScheme.secondary),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          children: [
+            _buildColorPickerRow(
+              context,
+              label: "Primary",
+              currentColor: AppColorsController.to.themeColors.value.primaryLight,
+              onColorPicked: (color) => _changePrimaryColor(color),
+            ),
+            const SizedBox(height: 8),
+            _buildColorPickerRow(
+              context,
+              label: "Secondary",
+              currentColor: AppColorsController.to.themeColors.value.secondaryLight,
+              onColorPicked: (color) => _changeSecondaryColor(color),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
 
   Widget _buildLanguageTile(context) {
     return Container(
@@ -80,7 +142,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 style: Get.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 )),
-            leading: Icon(Icons.language, color: Get.theme.colorScheme.primary),
+            leading: Icon(Icons.language, color: Get.theme.colorScheme.secondary),
             initiallyExpanded: true,
             tilePadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4), // Remove default padding
             childrenPadding: EdgeInsets.zero, // Remove default padding
@@ -94,7 +156,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       margin: const EdgeInsets.symmetric(vertical: 4),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? Get.theme.colorScheme.primary.withValues(alpha: 0.1)
+                            ? Get.theme.colorScheme.secondary.withValues(alpha: 0.1)
                             : Get.theme.scaffoldBackgroundColor,
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
@@ -113,7 +175,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           style: Get.textTheme.bodyLarge?.copyWith(
                             fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                             color: isSelected
-                                ? Get.theme.colorScheme.primary
+                                ? Get.theme.colorScheme.secondary
                                 : Get.theme.colorScheme.onSurface,
                           ),
                         ),
@@ -123,7 +185,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           onChanged: (value) async {
                             await localeService.changeLanguage(value!);
                           },
-                          activeColor: Get.theme.colorScheme.primary,
+                          activeColor: Get.theme.colorScheme.secondary,
                           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
                         shape: RoundedRectangleBorder(
@@ -172,7 +234,7 @@ class _SettingsPageState extends State<SettingsPage> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           leading: Icon(
             ThemeController.to.isDarkMode ? Icons.dark_mode : Icons.light_mode,
-            color: Get.theme.colorScheme.primary,
+            color: Get.theme.colorScheme.secondary,
           ),
           title: Text(
             AppLocalizations.of(context).darkMode,
@@ -189,7 +251,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ThemeController.to.isDarkMode ? ThemeController.to.setTheme("light") : ThemeController.to.setTheme("dark");
                 });
               },
-              activeTrackColor: Get.theme.colorScheme.primary,
+              activeTrackColor: Get.theme.colorScheme.secondary,
             ),
           ),
           shape: RoundedRectangleBorder(
@@ -202,6 +264,47 @@ class _SettingsPageState extends State<SettingsPage> {
           },
         ),
       ),
+    );
+  }
+
+  Widget _buildColorPickerRow(BuildContext context, {
+    required String label,
+    required Color currentColor,
+    required ValueChanged<Color> onColorPicked,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: Get.textTheme.bodyLarge),
+        GestureDetector(
+          onTap: () {
+            showColorPickerDialog(context, currentColor, onColorPicked);
+          },
+          child: Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: currentColor,
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.grey.withValues(alpha: 0.4)),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _changePrimaryColor(Color color) async {
+    final themeColors = AppColorsController.to.themeColors.value;
+    await AppColorsController.to.updateThemeColors(
+      themeColors.copyWith(primaryLight: color, primaryDark: color),
+    );
+  }
+
+  Future<void> _changeSecondaryColor(Color color) async {
+    final themeColors = AppColorsController.to.themeColors.value;
+    await AppColorsController.to.updateThemeColors(
+      themeColors.copyWith(secondaryLight: color, secondaryDark: color),
     );
   }
 

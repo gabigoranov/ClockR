@@ -114,7 +114,7 @@ class _CountdownTimerComponentState extends State<CountdownTimerComponent>
                   color: widget.isTimeUp
                       ? Theme.of(context).colorScheme.errorContainer
                       : widget.isActive
-                      ? Theme.of(context).colorScheme.secondaryContainer
+                      ? Theme.of(context).colorScheme.primary
                       : Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
@@ -150,7 +150,7 @@ class _CountdownTimerComponentState extends State<CountdownTimerComponent>
                             duration: const Duration(milliseconds: 300),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Get.theme.colorScheme.primary,
+                                color: Get.theme.colorScheme.secondary,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
@@ -177,7 +177,7 @@ class _CountdownTimerComponentState extends State<CountdownTimerComponent>
                                     color: isTimeUp
                                         ? Get.theme.colorScheme.onErrorContainer
                                         : widget.isActive
-                                        ? Get.theme.colorScheme.onSecondaryContainer
+                                        ? Get.theme.colorScheme.onPrimaryContainer
                                         : Get.theme.colorScheme.onSurface,
                                     fontWeight: FontWeight.bold,
                                   ),

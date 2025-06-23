@@ -85,6 +85,12 @@
       }
     }
   },
-  "save": "Save"
-
+  "save": "Save",
+  "select": "Select",
+  "delete": "Delete",
+  "deleteTimeControlTitle": "Delete Time Control",
+  "deleteTimeControlConfirmation": "Are you sure you want to delete this time control?",
+  "editTimeControlTitle": "Edit Time Control",
+  "colorScheme": "Color Scheme",
+  "primaryColor": "Primary Color"
 }

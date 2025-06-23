@@ -1,23 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tempus/controllers/countdown_timer_controller.dart';
 import 'package:tempus/controllers/time_control_controller.dart';
 import '../components/are_you_sure_dialog.dart';
 import '../l10n/app_localizations.dart';
 import '../models/time_control.dart';
 
-class AddTimeControlScreen extends StatefulWidget {
-  const AddTimeControlScreen({super.key});
+class EditTimeControlScreen extends StatefulWidget {
+  final TimeControl model;
+  const EditTimeControlScreen({super.key, required this.model});
 
   @override
-  State<AddTimeControlScreen> createState() => _AddTimeControlScreenState();
+  State<EditTimeControlScreen> createState() => _EditTimeControlScreenState();
 }
 
-class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
+class _EditTimeControlScreenState extends State<EditTimeControlScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  int _minutes = 5;
-  int _seconds = 0;
-  int _increment = 0;
+  late int _minutes;
+  late int _seconds;
+  late int _increment;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize with existing values from the model
+    _nameController.text = widget.model.name;
+    _minutes = widget.model.seconds ~/ 60;
+    _seconds = widget.model.seconds % 60;
+    _increment = widget.model.increment;
+  }
 
   @override
   void dispose() {
@@ -27,14 +39,13 @@ class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
 
   Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
-      final timeControl = TimeControl(
-        (_minutes * 60) + _seconds,
-        _increment,
-        _nameController.text.trim(),
-        isCustom: true,
-      );
+      // Update the existing model directly
+      widget.model.name = _nameController.text.trim();
+      widget.model.seconds = (_minutes * 60) + _seconds;
+      widget.model.increment = _increment;
 
-      if (TimeControlController.presetExists(_nameController.text.trim())) {
+      if (TimeControlController.presetExists(widget.model.name) &&
+          widget.model.name != widget.model.name) {
         final bool? result = await showAreYouSureDialog(
           context: context,
           title: AppLocalizations.of(context).error,
@@ -44,14 +55,31 @@ class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
           confirmColor: Theme.of(context).colorScheme.secondary,
         );
 
-        if (result == true) {
-          await TimeControlController.updatePreset(timeControl);
-          Get.back();
-        }
-      } else {
-        await TimeControlController.addPreset(timeControl);
-        Get.back();
+        if (result != true) return;
       }
+
+      if(TimeControlController.activeTimeControl.value.name == TimeControlController.selectedTimeControl.value.name) {
+        CountdownTimerController.to.initialize(widget.model.seconds, widget.model.increment);
+      }
+      await TimeControlController.updatePreset(widget.model);
+
+      Get.back();
+    }
+  }
+
+  Future<void> _deleteTimeControl() async {
+    final bool? result = await showAreYouSureDialog(
+      context: context,
+      title: AppLocalizations.of(context).deleteTimeControlTitle,
+      content: AppLocalizations.of(context).deleteTimeControlConfirmation,
+      confirmText: AppLocalizations.of(context).delete,
+      cancelText: AppLocalizations.of(context).cancel,
+      confirmColor: Theme.of(context).colorScheme.error,
+    );
+
+    if (result == true) {
+      await TimeControlController.removePreset(widget.model.name);
+      Get.back();
     }
   }
 
@@ -63,12 +91,16 @@ class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.addTimeControlTitle),
+        title: Text(l10n.editTimeControlTitle),
         actions: [
+          IconButton(
+            icon: Icon(Icons.delete, color: Colors.white54),
+            onPressed: _deleteTimeControl,
+          ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(0,0, 6, 0),
+            padding: const EdgeInsets.fromLTRB(0, 0, 6, 0),
             child: IconButton(
-              icon: Icon(Icons.check),
+              icon: const Icon(Icons.check),
               onPressed: _submit,
             ),
           ),
@@ -225,11 +257,13 @@ class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
                       TimeControl(
                         (_minutes * 60) + _seconds,
                         _increment,
-                        AppLocalizations.of(context).previewLabel,
+                        _nameController.text.isNotEmpty
+                            ? _nameController.text
+                            : widget.model.name,
                       ).toString(),
                       style: theme.textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.w700,
-                        color: colorScheme.primary,
+                        color: colorScheme.secondary,
                       ),
                     ),
                   ],

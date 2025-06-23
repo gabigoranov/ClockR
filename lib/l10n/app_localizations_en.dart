@@ -152,4 +152,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get save => 'Save';
+
+  @override
+  String get select => 'Select';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get deleteTimeControlTitle => 'Delete Time Control';
+
+  @override
+  String get deleteTimeControlConfirmation => 'Are you sure you want to delete this time control?';
+
+  @override
+  String get editTimeControlTitle => 'Edit Time Control';
+
+  @override
+  String get colorScheme => 'Color Scheme';
+
+  @override
+  String get primaryColor => 'Primary Color';
 }

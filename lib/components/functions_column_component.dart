@@ -71,7 +71,7 @@ class FunctionsColumnComponent extends StatelessWidget {
               icon: Icon(
                 Icons.swap_vert,
                 size: 36,
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).colorScheme.secondary,
               ),
               onPressed: timerController.switchTurn,
               tooltip: AppLocalizations.of(context).switchTurn,

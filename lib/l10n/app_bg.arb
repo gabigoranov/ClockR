@@ -43,6 +43,12 @@
   "completeFlexibleUpdate": "Инсталирай изтеглената актуализация",
   "updateSnackbarSuccess": "Актуализацията е успешна!",
   "updateSnackbarFailure": "Актуализацията неуспешна: {error}",
-  "save": "Запазване"
-
+  "save": "Запазване",
+  "select": "Избери",
+  "delete": "Изтрий",
+  "deleteTimeControlTitle": "Изтриване на Времеви Контрол",
+  "deleteTimeControlConfirmation": "Сигурни ли сте, че искате да изтриете този времеви контрол?",
+  "editTimeControlTitle": "Редактирай Времеви Контрол",
+  "colorScheme": "Цветова Схема",
+  "primaryColor": "Основен Цвят"
 }

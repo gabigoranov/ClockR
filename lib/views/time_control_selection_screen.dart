@@ -8,6 +8,8 @@ import 'package:tempus/views/settings.dart';
 import '../controllers/time_control_controller.dart';
 import '../l10n/app_localizations.dart';
 import 'add_time_control_screen.dart';
+import 'clock_screen.dart';
+import 'edit_time_control_screen.dart';
 
 class TimeControlSelectionScreen extends StatefulWidget {
   const TimeControlSelectionScreen({super.key});
@@ -19,8 +21,6 @@ class TimeControlSelectionScreen extends StatefulWidget {
 class _TimeControlSelectionScreenState extends State<TimeControlSelectionScreen> {
   @override
   Widget build(BuildContext context) {
-    final String selectedName = TimeControlController.currentTimeControl.value.name;
-
     return Scaffold(
       appBar: AppBar(
         title: Align(
@@ -28,20 +28,41 @@ class _TimeControlSelectionScreenState extends State<TimeControlSelectionScreen>
           child: Text(AppLocalizations.of(context).timeControls),
         ),
       ),
-      body: Column(
-        children: [
-          _buildActionBar(context),
-          _buildCustomTimeControlsSection(context, selectedName),
-          Expanded(
-            child: _buildTimeControlsSection(context, selectedName),
-          ),
-        ],
-      ),
+      body: Obx(() {
+        String selectedName = TimeControlController.selectedTimeControl.value.name;
+        String activeName = TimeControlController.activeTimeControl.value.name;
+
+        debugPrint(selectedName);
+        debugPrint(activeName);
+
+        return Stack(
+          children: [
+            Column(
+              children: [
+                _buildActionBar(context),
+                _buildCustomTimeControlsSection(context, selectedName),
+                Expanded(
+                  child: _buildTimeControlsSection(context, selectedName),
+                ),
+              ],
+            ),
+            Positioned(
+              bottom: 16,
+              left: 0,
+              right: 0,
+              child: _buildSelectTimeControlButton(
+                context,
+                selectedName != activeName,
+              ),
+            ),
+          ],
+        );
+
+      }),
     );
   }
 
   Widget _buildTimeControlsSection(BuildContext context, String selectedName) {
-
     return Obx(() {
       final timeControls = TimeControlController.defaultTimeControls();
 
@@ -59,7 +80,6 @@ class _TimeControlSelectionScreenState extends State<TimeControlSelectionScreen>
           animation: animation,
           builder: (BuildContext context, Widget? child) {
             final double animValue = Curves.easeInOut.transform(animation.value);
-            final double elevation = lerpDouble(1, 6, animValue)!;
             final double scale = lerpDouble(1, 1.02, animValue)!;
             return Transform.scale(
               scale: scale,
@@ -90,6 +110,37 @@ class _TimeControlSelectionScreenState extends State<TimeControlSelectionScreen>
         ),
       );
     });
+  }
+
+  Widget _buildSelectTimeControlButton(BuildContext context, bool isNewSelection) {
+    if(!isNewSelection) {
+      // If the selected time control is already active, return an empty container
+      return SizedBox.shrink();
+    }
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Container(
+          margin: EdgeInsets.fromLTRB(30, 12, 30, 0),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 20),
+            ),
+            onPressed: () {
+              TimeControlController.activatePreset();
+              Get.to(() => const ClockScreen(), transition: Transition.fade);
+            },
+            child: Text(AppLocalizations.of(context).select, style: TextStyle(fontSize: 22)),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildCustomTimeControlsSection(BuildContext context, String selectedName) {
@@ -158,7 +209,7 @@ class _TimeControlSelectionScreenState extends State<TimeControlSelectionScreen>
     return Container(
       margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondaryContainer,
+        color: Theme.of(context).colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(12), // Rounded corners
         boxShadow: [
           BoxShadow(
@@ -184,7 +235,9 @@ class _TimeControlSelectionScreenState extends State<TimeControlSelectionScreen>
               context: context,
               icon: Icons.edit_note,
               label: AppLocalizations.of(context).edit,
-              onTap: () => Get.toNamed('/edit-time-controls'),
+              onTap: () {
+                Get.to(() => EditTimeControlScreen(model: TimeControlController.selectedTimeControl.value,), transition: Transition.fade);
+              },
             ),
             _buildDivider(),
             _buildActionTile(

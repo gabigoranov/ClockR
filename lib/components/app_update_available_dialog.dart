@@ -183,7 +183,7 @@ class _AppUpdateAvailableComponentState extends State<AppUpdateAvailableComponen
       width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: Theme.of(context).colorScheme.secondary,
           foregroundColor: Colors.white,
         ),
         onPressed: onPressed,
