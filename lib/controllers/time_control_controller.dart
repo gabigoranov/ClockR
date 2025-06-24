@@ -74,8 +74,6 @@ class TimeControlController extends GetxController {
     super.onInit();
     await readPresets();
 
-    debugPrint("initting");
-
     selectedTimeControl = timeControlPresets[3].obs; // Default to the 4th preset
     activeTimeControl = timeControlPresets[3].obs; // Default to the 4th preset
   }

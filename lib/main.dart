@@ -5,15 +5,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:tempus/components/app_update_available_dialog.dart';
-import 'package:tempus/services/app_update_service.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'package:tempus/services/audio_service.dart';
 import 'package:tempus/services/locale_service.dart';
 import 'package:tempus/services/system_chrome_service.dart';
 import 'package:tempus/views/clock_screen.dart';
 
 import 'controllers/app_colors_controller.dart';
-import 'controllers/common/themes.dart';
 import 'controllers/countdown_timer_controller.dart';
 import 'controllers/theme_controller.dart';
 import 'controllers/time_control_controller.dart';
@@ -32,7 +30,6 @@ Future<void> main() async {
 Future<void> _initializeServices() async {
   Get.put(AppColorsController(const FlutterSecureStorage()), permanent: true);
   Get.put(ThemeController(const FlutterSecureStorage()), permanent: true);
-  Get.put(AppUpdateService());
   Get.put(SystemChromeService());
   Get.put(AudioService());
   Get.put(LocaleService(
@@ -62,13 +59,32 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
 
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
   @override
   void initState() {
-    final updateInfo = AppUpdateService.to.checkForUpdate();
-    showUpdateDialog(context: context, updateInfoFuture: updateInfo);
-
     super.initState();
+    checkForUpdate();
+  }
+
+  Future<void> checkForUpdate() async {
+    print('checking for Update');
+    InAppUpdate.checkForUpdate().then((info) {
+      setState(() {
+        if (info.updateAvailability == UpdateAvailability.updateAvailable) {
+          print('update available');
+          update();
+        }
+      });
+    }).catchError((e) {
+      print(e.toString());
+    });
+  }
+
+  void update() async {
+    print('Updating');
+    await InAppUpdate.startFlexibleUpdate();
+    InAppUpdate.completeFlexibleUpdate().then((_) {}).catchError((e) {
+      print(e.toString());
+    });
   }
 
 
