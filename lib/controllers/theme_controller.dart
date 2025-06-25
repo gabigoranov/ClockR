@@ -12,6 +12,7 @@ class ThemeController extends GetxController {
   ThemeController(this._storage);
 
   final FlutterSecureStorage _storage;
+  final AppColorsController _appColorsController = Get.find();
   final Rx<ThemeMode> themeMode = ThemeMode.light.obs;
   final Rx<ThemeData> themeData = buildTheme(ThemeMode.light).obs;
 
@@ -21,7 +22,7 @@ class ThemeController extends GetxController {
 
     initialize();
 
-    AppColorsController.to.themeColors.listen((newColors) {
+    _appColorsController.themeColors.listen((newColors) {
       themeData.value = buildTheme(themeMode.value);
     });
   }

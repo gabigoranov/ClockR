@@ -30,14 +30,6 @@ void main() {
     when(() => mockLocaleUpdater.call(any()))
         .thenAnswer((_) async {});
 
-    when(() => mockStorage.read(key: any(named: 'key')))
-        .thenAnswer((_) async => 'en');
-
-    when(() => mockStorage.write(
-      key: any(named: 'key'),
-      value: any(named: 'value'),
-    )).thenAnswer((_) async {});
-
     Get.replace(LocaleService(storage: mockStorage, updateLocaleCallback: mockLocaleUpdater.call));
   });
 

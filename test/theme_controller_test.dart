@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart' show TestWidgetsFlutterBinding;
+import 'package:get/get.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:tempus/controllers/app_colors_controller.dart';
 import 'package:tempus/controllers/theme_controller.dart';
 import 'package:test/test.dart';
 
@@ -11,32 +13,19 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   late ThemeController themeController;
+  late AppColorsController appColorsController;
   late MockFlutterSecureStorage mockStorage;
 
   setUp(() {
+    Get.testMode = true;
+    Get.reset(); // reset everything first
+
+
     mockStorage = MockFlutterSecureStorage();
+
+    Get.replace(AppColorsController(mockStorage));
+
     themeController = ThemeController(mockStorage);
-
-    when(() => mockStorage.read(
-      key: any(named: 'key'),
-      iOptions: any(named: 'iOptions'),
-      aOptions: any(named: 'aOptions'),
-      lOptions: any(named: 'lOptions'),
-      webOptions: any(named: 'webOptions'),
-      mOptions: any(named: 'mOptions'),
-      wOptions: any(named: 'wOptions'),
-    )).thenAnswer((_) async => null);
-
-    when(() => mockStorage.write(
-      key: any(named: 'key'),
-      value: any(named: 'value'),
-      iOptions: any(named: 'iOptions'),
-      aOptions: any(named: 'aOptions'),
-      lOptions: any(named: 'lOptions'),
-      webOptions: any(named: 'webOptions'),
-      mOptions: any(named: 'mOptions'),
-      wOptions: any(named: 'wOptions'),
-    )).thenAnswer((_) async {});
   });
 
   tearDown(() {
@@ -50,6 +39,8 @@ void main() {
 
       // Act
       await themeController.initialize();
+
+      debugPrint("Initialized with theme: ${themeController.themeMode.value}");
 
       // Assert
       expect(themeController.themeMode.value, ThemeMode.dark);
