@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tempus/controllers/time_control_controller.dart';
 import '../components/are_you_sure_dialog.dart';
 import '../l10n/app_localizations.dart';
 import '../models/time_control.dart';
+import '../models/time_control_data.dart';
 
 class AddTimeControlScreen extends StatefulWidget {
   const AddTimeControlScreen({super.key});
@@ -18,6 +21,15 @@ class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
   int _minutes = 5;
   int _seconds = 0;
   int _increment = 0;
+  bool _advancedMode = false;
+
+  // Advanced mode controls
+  int _playerMinutes = 5;
+  int _playerSeconds = 0;
+  int _playerIncrement = 0;
+  int _opponentMinutes = 5;
+  int _opponentSeconds = 0;
+  int _opponentIncrement = 0;
 
   @override
   void dispose() {
@@ -27,12 +39,41 @@ class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
 
   Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
+      if (_minutes + _seconds <= 0 || _playerMinutes + _playerSeconds == 0 || _opponentMinutes + _opponentSeconds == 0) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(AppLocalizations.of(context).invalidData),
+                content: Text(AppLocalizations.of(context).invalidBaseTime),
+                actions: [
+                  TextButton(
+                    onPressed: () {},
+                    child: Text(AppLocalizations.of(context).tryAgain),
+                  ),
+                ],
+              );
+            }
+        );
+        return;
+      }
+
+      final player = _advancedMode
+          ? TimeControlData((_playerMinutes * 60) + _playerSeconds, _playerIncrement)
+          : TimeControlData((_minutes * 60) + _seconds, _increment);
+
+      final opponent = _advancedMode
+          ? TimeControlData((_opponentMinutes * 60) + _opponentSeconds, _opponentIncrement)
+          : TimeControlData((_minutes * 60) + _seconds, _increment);
+
       final timeControl = TimeControl(
-        (_minutes * 60) + _seconds,
-        _increment,
+        player,
+        opponent,
         _nameController.text.trim(),
         isCustom: true,
       );
+
+      debugPrint(jsonEncode(timeControl));
 
       if (TimeControlController.presetExists(_nameController.text.trim())) {
         final bool? result = await showAreYouSureDialog(
@@ -98,10 +139,6 @@ class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
                   hintText: l10n.timeControlNameHint,
                   filled: true,
                   fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: BorderSide.none,
-                  ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(14),
                     borderSide: BorderSide(
@@ -138,55 +175,182 @@ class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
               ),
               const SizedBox(height: 28),
 
-              // Base Time Section
-              Text(
-                l10n.baseTimeLabel.toUpperCase(),
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: colorScheme.onSurface.withValues(alpha: 0.6),
-                  letterSpacing: 1.2,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 12),
+              // Advanced Mode Toggle
               Row(
                 children: [
                   Expanded(
-                    child: _TimeDropdown(
-                      value: _minutes,
-                      items: List.generate(121, (index) => index),
-                      labelBuilder: (value) => l10n.minutesSuffix(value),
-                      onChanged: (value) => setState(() => _minutes = value!),
+                    child: Text(
+                      l10n.advancedModeLabel.toUpperCase(),
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: colorScheme.onSurface.withValues(alpha: 0.6),
+                        letterSpacing: 1.2,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: _TimeDropdown(
-                      value: _seconds,
-                      items: const [0, 15, 30, 45],
-                      labelBuilder: (value) => l10n.secondsSuffix(value),
-                      onChanged: (value) => setState(() => _seconds = value!),
-                    ),
+                  Switch(
+                    value: _advancedMode,
+                    onChanged: (value) {
+                      setState(() {
+                        _advancedMode = value;
+                      });
+                    },
+                    activeColor: colorScheme.secondary,
                   ),
                 ],
               ),
-              const SizedBox(height: 28),
+              const SizedBox(height: 16),
 
-              // Increment Section
-              Text(
-                l10n.incrementLabel.toUpperCase(),
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: colorScheme.onSurface.withValues(alpha: 0.6),
-                  letterSpacing: 1.2,
-                  fontWeight: FontWeight.w600,
+              if (!_advancedMode) ...[
+                // Standard Mode Controls
+                // Base Time Section
+                Text(
+                  l10n.baseTimeLabel.toUpperCase(),
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: colorScheme.onSurface.withValues(alpha: 0.6),
+                    letterSpacing: 1.2,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 12),
-              _TimeDropdown(
-                value: _increment,
-                items: List.generate(61, (index) => index),
-                labelBuilder: (value) => l10n.incrementSuffix(value),
-                onChanged: (value) => setState(() => _increment = value!),
-              ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _TimeDropdown(
+                        value: _minutes,
+                        items: List.generate(121, (index) => index),
+                        labelBuilder: (value) => l10n.minutesSuffix(value),
+                        onChanged: (value) => setState(() => _minutes = value!),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _TimeDropdown(
+                        value: _seconds,
+                        items: const [0, 15, 30, 45],
+                        labelBuilder: (value) => l10n.secondsSuffix(value),
+                        onChanged: (value) => setState(() => _seconds = value!),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 28),
+
+                // Increment Section
+                Text(
+                  l10n.incrementLabel.toUpperCase(),
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: colorScheme.onSurface.withValues(alpha: 0.6),
+                    letterSpacing: 1.2,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                _TimeDropdown(
+                  value: _increment,
+                  items: List.generate(61, (index) => index),
+                  labelBuilder: (value) => l10n.incrementSuffix(value),
+                  onChanged: (value) => setState(() => _increment = value!),
+                ),
+              ] else ...[
+                // Advanced Mode Controls
+                // Player Time Section
+                Text(
+                  '${l10n.playerLabel} ${l10n.baseTimeLabel.toUpperCase()}',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: colorScheme.onSurface.withValues(alpha: 0.6),
+                    letterSpacing: 1.2,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _TimeDropdown(
+                        value: _playerMinutes,
+                        items: List.generate(121, (index) => index),
+                        labelBuilder: (value) => l10n.minutesSuffix(value),
+                        onChanged: (value) => setState(() => _playerMinutes = value!),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _TimeDropdown(
+                        value: _playerSeconds,
+                        items: const [0, 15, 30, 45],
+                        labelBuilder: (value) => l10n.secondsSuffix(value),
+                        onChanged: (value) => setState(() => _playerSeconds = value!),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  '${l10n.playerLabel} ${l10n.incrementLabel.toUpperCase()}',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: colorScheme.onSurface.withValues(alpha: 0.6),
+                    letterSpacing: 1.2,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                _TimeDropdown(
+                  value: _playerIncrement,
+                  items: List.generate(61, (index) => index),
+                  labelBuilder: (value) => l10n.incrementSuffix(value),
+                  onChanged: (value) => setState(() => _playerIncrement = value!),
+                ),
+                const SizedBox(height: 28),
+
+                // Opponent Time Section
+                Text(
+                  '${l10n.opponentLabel} ${l10n.baseTimeLabel.toUpperCase()}',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: colorScheme.onSurface.withValues(alpha: 0.6),
+                    letterSpacing: 1.2,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _TimeDropdown(
+                        value: _opponentMinutes,
+                        items: List.generate(121, (index) => index),
+                        labelBuilder: (value) => l10n.minutesSuffix(value),
+                        onChanged: (value) => setState(() => _opponentMinutes = value!),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _TimeDropdown(
+                        value: _opponentSeconds,
+                        items: const [0, 15, 30, 45],
+                        labelBuilder: (value) => l10n.secondsSuffix(value),
+                        onChanged: (value) => setState(() => _opponentSeconds = value!),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  '${l10n.opponentLabel} ${l10n.incrementLabel.toUpperCase()}',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: colorScheme.onSurface.withValues(alpha: 0.6),
+                    letterSpacing: 1.2,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                _TimeDropdown(
+                  value: _opponentIncrement,
+                  items: List.generate(61, (index) => index),
+                  labelBuilder: (value) => l10n.incrementSuffix(value),
+                  onChanged: (value) => setState(() => _opponentIncrement = value!),
+                ),
+              ],
               const SizedBox(height: 32),
 
               // Preview Card
@@ -221,17 +385,45 @@ class _AddTimeControlScreenState extends State<AddTimeControlScreen> {
                       ],
                     ),
                     const SizedBox(height: 12),
-                    Text(
-                      TimeControl(
-                        (_minutes * 60) + _seconds,
-                        _increment,
-                        AppLocalizations.of(context).previewLabel,
-                      ).toString(),
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: colorScheme.primary,
+                    if (!_advancedMode) ...[
+                      Text(
+                        TimeControlData(
+                          (_minutes * 60) + _seconds,
+                          _increment,
+                        ).toString(),
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: colorScheme.primary,
+                        ),
                       ),
-                    ),
+                    ] else ...[
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${l10n.playerLabel}: ${TimeControlData(
+                              (_playerMinutes * 60) + _playerSeconds,
+                              _playerIncrement,
+                            ).toString()}',
+                            style: theme.textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: colorScheme.primary,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            '${l10n.opponentLabel}: ${TimeControlData(
+                              (_opponentMinutes * 60) + _opponentSeconds,
+                              _opponentIncrement,
+                            ).toString()}',
+                            style: theme.textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: colorScheme.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
               ),

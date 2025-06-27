@@ -173,4 +173,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get primaryColor => 'Primary Color';
+
+  @override
+  String get invalidData => 'Invalid Data';
+
+  @override
+  String get invalidBaseTime => 'Base Time must be greater than 0!';
+
+  @override
+  String get tryAgain => 'Try Again';
+
+  @override
+  String get advancedModeLabel => 'Advanced Mode';
+
+  @override
+  String get playerLabel => 'Player';
+
+  @override
+  String get opponentLabel => 'Opponent';
 }

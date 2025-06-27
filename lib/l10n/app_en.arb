@@ -92,5 +92,20 @@
   "deleteTimeControlConfirmation": "Are you sure you want to delete this time control?",
   "editTimeControlTitle": "Edit Time Control",
   "colorScheme": "Color Scheme",
-  "primaryColor": "Primary Color"
+  "primaryColor": "Primary Color",
+  "invalidData": "Invalid Data",
+  "invalidBaseTime": "Base Time must be greater than 0!",
+  "tryAgain": "Try Again",
+  "advancedModeLabel": "Advanced Mode",
+  "playerLabel": "Player",
+  "opponentLabel": "Opponent",
+  "@advancedModeLabel": {
+    "description": "Label for the advanced mode toggle switch"
+  },
+  "@playerLabel": {
+    "description": "Label for player time controls in advanced mode"
+  },
+  "@opponentLabel": {
+    "description": "Label for opponent time controls in advanced mode"
+  }
 }

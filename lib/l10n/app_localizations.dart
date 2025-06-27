@@ -406,6 +406,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Primary Color'**
   String get primaryColor;
+
+  /// No description provided for @invalidData.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid Data'**
+  String get invalidData;
+
+  /// No description provided for @invalidBaseTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Base Time must be greater than 0!'**
+  String get invalidBaseTime;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tryAgain;
+
+  /// Label for the advanced mode toggle switch
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Mode'**
+  String get advancedModeLabel;
+
+  /// Label for player time controls in advanced mode
+  ///
+  /// In en, this message translates to:
+  /// **'Player'**
+  String get playerLabel;
+
+  /// Label for opponent time controls in advanced mode
+  ///
+  /// In en, this message translates to:
+  /// **'Opponent'**
+  String get opponentLabel;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

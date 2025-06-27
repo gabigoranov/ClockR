@@ -16,8 +16,6 @@ class TimeControlComponent extends StatefulWidget {
 }
 
 class _TimeControlComponentState extends State<TimeControlComponent> {
-  bool isExpanded = false;
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -57,8 +55,8 @@ class _TimeControlComponentState extends State<TimeControlComponent> {
                           colorFilter: widget.isSelected ? const ColorFilter.mode(Colors.white, BlendMode.srcIn) :  ThemeController.to.isDarkMode ?
                               const ColorFilter.mode(Colors.white, BlendMode.srcIn) :
                               const ColorFilter.mode(Colors.black, BlendMode.srcIn),
-                          child: widget.model.seconds < 180 ? icons["bullet"]!
-                              : widget.model.seconds < 600 ? icons["blitz"]!
+                          child: widget.model.player.seconds < 180 ? icons["bullet"]!
+                              : widget.model.player.seconds < 600 ? icons["blitz"]!
                               : icons["rapid"]!,
                       ),
                     ),
@@ -69,34 +67,6 @@ class _TimeControlComponentState extends State<TimeControlComponent> {
                 Text(widget.model.toString(), style: widget.isSelected ? TextStyle(color: Colors.white) : null,),
               ],
             ),
-            isExpanded ? Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-
-                  },
-                  icon: Icon(Icons.edit),
-                ),
-                IconButton(
-                  onPressed: () {
-
-                  },
-                  icon: Icon(Icons.edit),
-                ),
-                IconButton(
-                  onPressed: () {
-
-                  },
-                  icon: Icon(Icons.edit),
-                ),
-                IconButton(
-                  onPressed: () {
-
-                  },
-                  icon: Icon(Icons.edit),
-                ),
-              ],
-            ) : SizedBox.shrink(),
           ],
         ),
       ),

@@ -50,5 +50,20 @@
   "deleteTimeControlConfirmation": "Сигурни ли сте, че искате да изтриете този времеви контрол?",
   "editTimeControlTitle": "Редактирай Времеви Контрол",
   "colorScheme": "Цветова Схема",
-  "primaryColor": "Основен Цвят"
+  "primaryColor": "Основен Цвят",
+  "invalidData": "Невалидни Данни",
+  "invalidBaseTime": "Основното време трябва да е по-голямо от 0!",
+  "tryAgain": "Опитай Отново",
+  "advancedModeLabel": "Разширен Режим",
+  "playerLabel": "Играч",
+  "opponentLabel": "Противник",
+  "@advancedModeLabel": {
+    "description": "Етикет за превключвателя на разширения режим"
+  },
+  "@playerLabel": {
+    "description": "Етикет за времевите контроли на играча в разширен режим"
+  },
+  "@opponentLabel": {
+    "description": "Етикет за времевите контроли на противника в разширен режим"
+  }
 }
