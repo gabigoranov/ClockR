@@ -7,67 +7,124 @@ import 'package:tempus/controllers/countdown_timer_controller.dart';
 
 import '../components/time_control_component.dart';
 import '../models/time_control.dart';
+import '../models/time_control_data.dart';
 
 class TimeControlController extends GetxController {
   static TimeControlController get to => Get.find();
 
 
   static final timeControlPresets = [
+    // UltraBullet
+    TimeControl(
+      TimeControlData(30, 5),
+      TimeControlData(30, 5),
+      'UltraBullet (30|5)',
+    ),
+
     // Bullet
-    TimeControl(30, 0, 'Bullet (30 sec)'),
-    TimeControl(60, 0, 'Bullet (1|0)'),
-    TimeControl(60, 1, 'Bullet (1|1)'),
-    TimeControl(120, 0, 'Bullet (2|0)'),
-    TimeControl(120, 1, 'Bullet (2|1)'),
+    TimeControl(
+      TimeControlData(30, 0),
+      TimeControlData(30, 0),
+      'Bullet (30 sec)',
+    ),
+    TimeControl(
+      TimeControlData(60, 0),
+      TimeControlData(60, 0),
+      'Bullet (1|0)',
+    ),
+    TimeControl(
+      TimeControlData(60, 1),
+      TimeControlData(60, 1),
+      'Bullet (1|1)',
+    ),
+    TimeControl(
+      TimeControlData(120, 0),
+      TimeControlData(120, 0),
+      'Bullet (2|0)',
+    ),
+    TimeControl(
+      TimeControlData(120, 1),
+      TimeControlData(120, 1),
+      'Bullet (2|1)',
+    ),
 
     // Blitz
-    TimeControl(180, 0, 'Blitz (3|0)'),
-    TimeControl(180, 2, 'Blitz (3|2)'),
-    TimeControl(300, 0, 'Blitz (5|0)'),
-    TimeControl(300, 3, 'Blitz (5|3)'),
-    TimeControl(300, 5, 'Blitz (5|5)'),
+    TimeControl(
+      TimeControlData(180, 0),
+      TimeControlData(180, 0),
+      'Blitz (3|0)',
+    ),
+    TimeControl(
+      TimeControlData(180, 2),
+      TimeControlData(180, 2),
+      'Blitz (3|2)',
+    ),
+    TimeControl(
+      TimeControlData(300, 0),
+      TimeControlData(300, 0),
+      'Blitz (5|0)',
+    ),
+    TimeControl(
+      TimeControlData(300, 3),
+      TimeControlData(300, 3),
+      'Blitz (5|3)',
+    ),
 
     // Rapid
-    TimeControl(600, 0, 'Rapid (10|0)'),
-    TimeControl(600, 5, 'Rapid (10|5)'),
-    TimeControl(900, 0, 'Rapid (15|0)'),
-    TimeControl(900, 10, 'Rapid (15|10)'),
+    TimeControl(
+      TimeControlData(600, 0),
+      TimeControlData(600, 0),
+      'Rapid (10|0)',
+    ),
+    TimeControl(
+      TimeControlData(600, 5),
+      TimeControlData(600, 5),
+      'Rapid (10|5)',
+    ),
+    TimeControl(
+      TimeControlData(900, 0),
+      TimeControlData(900, 0),
+      'Rapid (15|0)',
+    ),
+    TimeControl(
+      TimeControlData(900, 10),
+      TimeControlData(900, 10),
+      'Rapid (15|10)',
+    ),
+    TimeControl(
+      TimeControlData(900, 15),
+      TimeControlData(900, 15),
+      'Rapid (15|15)',
+    ),
 
     // Classical
-    TimeControl(1800, 0, 'Classical (30|0)'),
-    TimeControl(1800, 20, 'Classical (30|20)'),
-    TimeControl(3600, 0, 'Classical (60|0)'),
-    TimeControl(3600, 30, 'Classical (60|30)'),
-    TimeControl(5400, 0, 'Classical (90|0)'),
-    TimeControl(5400, 30, 'Classical (90|30)'),
-    TimeControl(7200, 0, 'Classical (120|0)'),
-    TimeControl(7200, 30, 'Classical (120|30)'),
-
-    // Daily (correspondence)
-    TimeControl(24 * 3600, 0, 'Daily (1 day)'),
-    TimeControl(2 * 24 * 3600, 0, 'Daily (2 days)'),
-    TimeControl(3 * 24 * 3600, 0, 'Daily (3 days)'),
-    TimeControl(7 * 24 * 3600, 0, 'Daily (7 days)'),
-    TimeControl(14 * 24 * 3600, 0, 'Daily (14 days)'),
-
-    // Custom time controls that are popular on Chess.com
-    TimeControl(30, 5, 'UltraBullet (30|5)'),
-    TimeControl(60, 0, 'Bullet (1|0) - No Increment'),
-    TimeControl(900, 15, 'Rapid (15|15)'),
-    TimeControl(1800, 15, 'Classical (30|15)'),
-
-    // Chess960 variants
-    TimeControl(180, 2, 'Chess960 Blitz (3|2)'),
-    TimeControl(600, 5, 'Chess960 Rapid (10|5)'),
-
-    // Bughouse variants
-    TimeControl(180, 0, 'Bughouse Blitz (3|0)'),
-    TimeControl(300, 0, 'Bughouse Blitz (5|0)'),
-
-    // Other variants
-    TimeControl(300, 2, 'Three-check Blitz (5|2)'),
-    TimeControl(600, 5, 'Crazyhouse Rapid (10|5)'),
+    TimeControl(
+      TimeControlData(1800, 0),
+      TimeControlData(1800, 0),
+      'Classical (30|0)',
+    ),
+    TimeControl(
+      TimeControlData(1800, 15),
+      TimeControlData(1800, 15),
+      'Classical (30|15)',
+    ),
+    TimeControl(
+      TimeControlData(1800, 20),
+      TimeControlData(1800, 20),
+      'Classical (30|20)',
+    ),
+    TimeControl(
+      TimeControlData(3600, 0),
+      TimeControlData(3600, 0),
+      'Classical (60|0)',
+    ),
+    TimeControl(
+      TimeControlData(3600, 30),
+      TimeControlData(3600, 30),
+      'Classical (60|30)',
+    ),
   ].obs;
+
 
   @override
   Future<void> onInit() async{
@@ -97,7 +154,7 @@ class TimeControlController extends GetxController {
   static void activatePreset() {
     var preset = selectedTimeControl.value;
     activeTimeControl.value = preset;
-    CountdownTimerController.to.initialize(preset.seconds, preset.increment);
+    CountdownTimerController.to.initialize(preset.player, preset.opponent);
   }
 
   /// Add a new custom time control
@@ -168,9 +225,9 @@ class TimeControlController extends GetxController {
     if(read != null){
       List<dynamic> decoded = jsonDecode(read);
       timeControlPresets.clear();
-      decoded.forEach((value) {
-        timeControlPresets.add(TimeControl(value['seconds'], value['increment'], value['name'], isCustom:  value['isCustom']));
-      });
+      for (var value in decoded) {
+        timeControlPresets.add(TimeControl.fromJson(value));
+      }
     }
   }
 

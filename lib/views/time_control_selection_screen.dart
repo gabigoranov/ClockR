@@ -7,6 +7,7 @@ import 'package:tempus/views/settings.dart';
 
 import '../controllers/time_control_controller.dart';
 import '../l10n/app_localizations.dart';
+import '../models/time_control.dart';
 import 'add_time_control_screen.dart';
 import 'clock_screen.dart';
 import 'edit_time_control_screen.dart';
@@ -144,7 +145,11 @@ class _TimeControlSelectionScreenState extends State<TimeControlSelectionScreen>
   }
 
   Widget _buildCustomTimeControlsSection(BuildContext context, String selectedName) {
-    return Obx( () => Container(
+
+    return Obx(() {
+      final customTimeControls = TimeControlController.customTimeControls();
+
+      return Container(
         height: 240,
         margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
         decoration: BoxDecoration(
@@ -179,30 +184,31 @@ class _TimeControlSelectionScreenState extends State<TimeControlSelectionScreen>
               const SizedBox(height: 12),
               Expanded(
                 child: Center(
-                  child: TimeControlController.customTimeControls().isEmpty
-                      ? Text(
-                          AppLocalizations.of(context).noCustomControls,
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
-                        )
-                      :
-                  ListView.builder(
-                    itemCount: TimeControlController.customTimeControls().length,
-                    itemBuilder: (context, index) {
-                      return TimeControlComponent(
-                        model: TimeControlController.customTimeControls()[index],
-                        isSelected: TimeControlController.customTimeControls()[index].name == selectedName,
-                      );
-                    },
-                  )
+                    child: customTimeControls.isEmpty
+                        ? Text(
+                      AppLocalizations.of(context).noCustomControls,
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                      textAlign: TextAlign.center,
+                    )
+                        :
+                    ListView.builder(
+                      itemCount: customTimeControls.length,
+                      itemBuilder: (context, index) {
+                        return TimeControlComponent(
+                          model: customTimeControls[index],
+                          isSelected: customTimeControls[index].name == selectedName,
+                        );
+                      },
+                    )
                 ),
               ),
             ],
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget _buildActionBar(BuildContext context) {
@@ -228,7 +234,7 @@ class _TimeControlSelectionScreenState extends State<TimeControlSelectionScreen>
               context: context,
               icon: Icons.add_circle_outline,
               label: AppLocalizations.of(context).newTimeControl,
-              onTap: () => Get.to(() => const AddTimeControlScreen(), transition: Transition.fade),
+              onTap: () => Get.to(() => const AddTimeControlScreen(), transition: Transition.leftToRight),
             ),
             _buildDivider(),
             _buildActionTile(
@@ -236,7 +242,7 @@ class _TimeControlSelectionScreenState extends State<TimeControlSelectionScreen>
               icon: Icons.edit_note,
               label: AppLocalizations.of(context).edit,
               onTap: () {
-                Get.to(() => EditTimeControlScreen(model: TimeControlController.selectedTimeControl.value,), transition: Transition.fade);
+                Get.to(() => EditTimeControlScreen(model: TimeControlController.selectedTimeControl.value,), transition: Transition.downToUp);
               },
             ),
             _buildDivider(),
@@ -244,7 +250,7 @@ class _TimeControlSelectionScreenState extends State<TimeControlSelectionScreen>
               context: context,
               icon: Icons.settings_outlined,
               label: AppLocalizations.of(context).settings,
-              onTap: () => Get.to(() => const SettingsPage(), transition: Transition.fade),
+              onTap: () => Get.to(() => const SettingsPage(), transition: Transition.rightToLeft),
             ),
           ],
         ),

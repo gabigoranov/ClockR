@@ -2,6 +2,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:tempus/controllers/time_control_controller.dart';
 
+import '../models/time_control_data.dart';
 import '../services/audio_service.dart';
 
 /// CountdownTimerController manages the countdown timer for a chess game.
@@ -25,8 +26,10 @@ class CountdownTimerController extends GetxController with GetTickerProviderStat
   // Time tracking
   int? _lastPlayerTimestamp;
   int? _lastOpponentTimestamp;
-  late int _initialTime;
-  late int _increment;
+  late int _playerInitialTime;
+  late int _playerIncrement;
+  late int _opponentInitialTime;
+  late int _opponentIncrement;
 
   // Beep tracking
   final Set<int> _beepThresholds = {30000, 20000, 15000, 10000, 5000, 4000, 3000, 2000, 1000};
@@ -45,13 +48,17 @@ class CountdownTimerController extends GetxController with GetTickerProviderStat
   @override
   void onInit() {
     super.onInit();
-    initialize(TimeControlController.activeTimeControl.value.seconds, TimeControlController.activeTimeControl.value.increment); // Default to 5 minutes
+    initialize(TimeControlController.activeTimeControl.value.player, TimeControlController.activeTimeControl.value.opponent); // Default to 5 minutes
   }
 
   /// Initializes the timer with the given initial time in seconds and increment in miliseconds.
-  void initialize(int initialTimeInSeconds, int increment) {
-    _initialTime = initialTimeInSeconds * 1000;
-    _increment = increment * 1000;
+  void initialize(TimeControlData player, TimeControlData opponent) {
+    _playerInitialTime = player.seconds * 1000;
+    _playerIncrement = player.increment * 1000;
+
+    _opponentInitialTime = opponent.seconds * 1000;
+    _opponentIncrement = opponent.increment * 1000;
+
     reset();
   }
 
@@ -87,7 +94,7 @@ class CountdownTimerController extends GetxController with GetTickerProviderStat
 
   /// Starts the player ticker, which counts down the player's time.
   void _startPlayerTicker() {
-    opponentTime.value += _increment; // Add increment to opponent's time
+    opponentTime.value += _opponentIncrement; // Add increment to opponent's time
     _lastPlayerTimestamp = DateTime.now().millisecondsSinceEpoch;
 
     _playerTicker = createTicker((_) {
@@ -124,7 +131,7 @@ class CountdownTimerController extends GetxController with GetTickerProviderStat
 
   /// Starts the opponent ticker, which counts down the opponent's time.
   void _startOpponentTicker() {
-    playerTime.value += _increment; // Add increment to opponent's time
+    playerTime.value += _playerIncrement; // Add increment to opponent's time
 
     _stopPlayerTicker();    // Ensure only opponent ticker runs
     _stopOpponentTicker();  // Stop any existing ticker before creating a new one
@@ -206,8 +213,8 @@ class CountdownTimerController extends GetxController with GetTickerProviderStat
   void reset() {
     pause();
 
-    playerTime.value = _initialTime;
-    opponentTime.value = _initialTime;
+    playerTime.value = _playerInitialTime;
+    opponentTime.value = _opponentInitialTime;
 
     isPlayerTurn.value = true;
     isGameOver.value = false;

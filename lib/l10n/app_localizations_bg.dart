@@ -173,4 +173,22 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get primaryColor => 'Основен Цвят';
+
+  @override
+  String get invalidData => 'Невалидни Данни';
+
+  @override
+  String get invalidBaseTime => 'Основното време трябва да е по-голямо от 0!';
+
+  @override
+  String get tryAgain => 'Опитай Отново';
+
+  @override
+  String get advancedModeLabel => 'Разширен Режим';
+
+  @override
+  String get playerLabel => 'Играч';
+
+  @override
+  String get opponentLabel => 'Противник';
 }

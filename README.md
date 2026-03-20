@@ -29,16 +29,16 @@ A modern mobile chess clock with many useful features.
   </table>
 </div>
 
-## 📦 Installation
+## Installation
 You have three options to install and try out the app:
 
-### ✅ 1. Join the Beta on Google Play
+### 1. Join the Beta on Google Play
 The easiest way to get the app is through the Google Play Store beta program.
 
 👉 Join the Beta Program on Google Play
 You'll need to sign in with a Google account and accept the invitation.
 
-### 📱 2. Install the APK from GitHub
+### 2. Install the APK from GitHub
 Go to the Releases page
 
 Download the latest .apk file
@@ -47,7 +47,7 @@ Transfer it to your Android device
 
 Open it and install (you may need to allow unknown sources in your phone's settings)
 
-### 🛠 3. Build from Source
+### 3. Build from Source
 Make sure Flutter is installed.
 
 - Clone the repository
@@ -65,7 +65,7 @@ To build an APK manually: ```flutter build apk```
 
 You’ll find the APK at ```build/app/outputs/flutter-apk/app-release.apk```.
 
-## 🚀 Usage
+## Usage
 
 Once installed, open the app and:
 
@@ -76,7 +76,7 @@ Once installed, open the app and:
 
 Use it for blitz, rapid, or classical games — fully adjustable to your play style.
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome!
 
@@ -90,7 +90,7 @@ If you'd like to suggest a feature, fix a bug, or improve localization:
 
 Please keep your code clean and follow Flutter/Dart best practices.
 
-## 📄 License
+## License
 
 This project is licensed under the **CC BY-NC-ND 4.0 International License**.
 
